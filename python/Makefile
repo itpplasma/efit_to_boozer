@@ -6,7 +6,8 @@ SRC_DIR = ../SRC
 
 # Specific Fortran source files
 
-FORTRAN_FILES = field_divB0.f90 efit_to_boozer_mod.f90 \
+FORTRAN_FILES = efit_to_boozer_python.f90 field_divB0.f90 \
+	efit_to_boozer_mod.f90 \
 	spline5_RZ.f90 spl_three_to_five_mod.f90 \
 	field_line_integration_for_Boozer.f90 \
 	plag_coeff.f90 binsrc.f90 rhs.f90 \
