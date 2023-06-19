@@ -20,7 +20,7 @@ module field_c_mod
 end module field_c_mod
 !
 module field_eq_mod
-  logical :: use_fpol = .false. !.true.                                      !<=18.12.18
+  logical :: use_fpol = .true. !.true.                                      !<=18.12.18
   integer :: icall_eq=0
   integer :: nrad,nzet,icp,nwindow_r,nwindow_z
   real(kind=8), parameter                      :: pi=3.14159265358979d0
