@@ -11,5 +11,6 @@
     double precision, dimension(0:nder,nplag) :: coef
     double precision, dimension(:),     allocatable :: rbeg,rsmall,qsaf,psi_pol,psi_tor_vac,psi_tor,C_const
     double precision, dimension(:,:,:), allocatable :: R_spl,Z_spl,bmod_spl,sqgnorm_spl,Gfunc_spl
+    double precision :: psimax = 1.d300
   end module efit_to_boozer_mod
 !

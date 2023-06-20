@@ -9,6 +9,7 @@
                             icall_eq,nrad,nzet,rad,zet,rtf,btf
   use theta_rz_mod, only : nsqp,hsqpsi,spllabel
   use rhs_surf_mod, only : dz_dphi
+  use efit_to_boozer_mod, only : psimax
 !
   implicit none
 !
@@ -140,6 +141,10 @@
         nsurf=isurf-1
         exit surf
       endif
+      if (psif > psimax) then
+        nsurf=isurf-1
+        exit surf
+      endif
     enddo
 !
 ! Newton method
@@ -156,7 +161,7 @@
   print *,'Field line integration: separatrix found'
 !
 !------------------------------------------------------------------------------
-!
+
 ! Re-define start points step size in R for data storage
   hbr=hbr*dfloat(nsurf)/dfloat(nlabel)
 !

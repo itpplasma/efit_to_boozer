@@ -14,16 +14,11 @@ FORTRAN_FILES = efit_to_boozer_python.f90 field_divB0.f90 \
 	spline_and_interpolate_magdata.f90
 FORTRAN_SOURCES = $(addprefix $(SRC_DIR)/,$(FORTRAN_FILES))
 
-EXTRA_FILES = bdivfree_coul.f90 \
-	odeint_allroutines.f
-
-EXTRA_SOURCES = $(addprefix $(SRC_DIR)/,$(EXTRA_FILES))
-EXTRA_OBJECTS := $(EXTRA_FILES:.f90=.o)
-EXTRA_OBJECTS := $(EXTRA_OBJECTS:.f=.o)
+EXTRA_OBJECTS = ../OBJS/bdivfree_coul.o \
+	../OBJS/odeint_allroutines.o
 
 # Target for building the f2py module
-$(MODULE_NAME).so: $(FORTRAN_SOURCES) $(EXTRA_SOURCES)
-	gfortran -c $(EXTRA_SOURCES)
+$(MODULE_NAME).so: $(FORTRAN_SOURCES)
 	f2py -c -m $(MODULE_NAME) $(FORTRAN_SOURCES) $(EXTRA_OBJECTS)
 
 # Clean target

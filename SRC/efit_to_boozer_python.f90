@@ -30,6 +30,7 @@
                       !when searching for the separatrix
   read (1,*) nsurf    !number of flux surfaces in Boozer file
   read (1,*) mpol     !number of poloidal modes in Boozer file
+  read (1,*) psimax   !psi at plasma boundary
   close(1)
 !
   allocate(rbeg(nlabel),rsmall(nlabel),qsaf(nlabel),psi_pol(0:nlabel))
