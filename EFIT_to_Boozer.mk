@@ -3,11 +3,11 @@
 FC = gfortran
 
 #OPTS= -M OBJS --chk a,e,s,u,x --trace --trap -g
-#OPTS= -M OBJS -O 
+#OPTS= -M OBJS -O
 #OPTS= -std=gnu -M OBJS -O3
 #OPTS= -M OBJS -Waliasing -Wampersand  -Wline-truncation  -Wnonstd-intrinsics  -Wsurprising -Wno-tabs  -Wunderflow #-Wall# -Wunused-parameter -Wconversion -Wimplicit-interface -Wcharacter-truncation
 #OPTS=-Wunused
-OPTS = -J OBJS -O
+OPTS = -J OBJS -O -fPIC
 
 OBJS =  OBJS/efit_to_boozer_mod.o \
 	OBJS/odeint_allroutines.o \
@@ -20,7 +20,7 @@ OBJS =  OBJS/efit_to_boozer_mod.o \
 	OBJS/rhs.o \
 	OBJS/field_line_integration_for_Boozer.o \
 	OBJS/spline_and_interpolate_magdata.o \
-	OBJS/efit_to_boozer.o 
+	OBJS/efit_to_boozer.o
 
 efit_to_boozer.x: $(OBJS) EFIT_to_Boozer.mk
 	$(FC) $(OPTS) -o efit_to_boozer.x $(OBJS) -llapack
