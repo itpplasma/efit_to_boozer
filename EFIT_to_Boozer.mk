@@ -7,7 +7,7 @@ FC = gfortran
 #OPTS= -std=gnu -M OBJS -O3
 #OPTS= -M OBJS -Waliasing -Wampersand  -Wline-truncation  -Wnonstd-intrinsics  -Wsurprising -Wno-tabs  -Wunderflow #-Wall# -Wunused-parameter -Wconversion -Wimplicit-interface -Wcharacter-truncation
 #OPTS=-Wunused
-OPTS = -J OBJS -O -fPIC
+OPTS = -J OBJS -O -fPIC -lblas
 
 OBJS =  OBJS/efit_to_boozer_mod.o \
 	OBJS/odeint_allroutines.o \

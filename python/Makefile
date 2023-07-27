@@ -19,7 +19,7 @@ EXTRA_OBJECTS = ../OBJS/bdivfree_coul.o \
 
 # Target for building the f2py module
 $(MODULE_NAME).so: $(FORTRAN_SOURCES)
-	f2py -c -m $(MODULE_NAME) $(FORTRAN_SOURCES) $(EXTRA_OBJECTS)
+	f2py -c -m $(MODULE_NAME) $(FORTRAN_SOURCES) $(EXTRA_OBJECTS) -lblas -llapack
 
 # Clean target
 clean:
