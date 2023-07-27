@@ -6,9 +6,11 @@
   implicit none
 !
   integer :: nstep,nsurfmax,i,is,it,nsurf,nt,mpol,inp_label,m,iunit
+  integer :: iunit_lhs,iunit_rhs                                                            !<=25.07.2023
   double precision :: s,theta,hs,htheta,aiota,aJb,B_theta,B_phi,oneovernt,twoovernt,sqrtg00
   double precision :: psi,q,dq_ds,C_norm,dC_norm_ds,sqrtg,bmod,dbmod_dtheta,sigma,     &
                       R,dR_ds,dR_dtheta,Z,dZ_ds,dZ_dtheta,G,dG_ds,dG_dtheta
+  double precision :: sigma_lhs,sigma_rhs                                                   !<=25.07.2023
   double precision :: phi,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
   double precision :: dB_phi_ds,dB_theta_ds,pprime
   double complex   :: four_ampl
@@ -63,14 +65,58 @@
   allocate(Rmn_c(0:mpol),Rmn_s(0:mpol),Zmn_c(0:mpol),Zmn_s(0:mpol))
   allocate(almn_c(0:mpol),almn_s(0:mpol),Bmn_c(0:mpol),Bmn_s(0:mpol))
 !
+!----------------------Begin comments Sergei 25.07.2023---------------------------------------
+! Variable "sigma" indicates screw direction for the field line. 
+!
+! If sigma = 1, this is a standard AUG case of the left-hand screw field line. 
+! For the (standard) left handed coordinates $(s,\vartheta,\varphi)$, iota > 0 in this
+! case (contra-variant toroidal and poloidal field components have the same signs). 
+! The original formal of the output file "fromefit.bc" is the same with standard AUG file.
+!
+! If sigma = -1, field line is a right-hand srew, and the format of "fromefit.bc" file
+! may not confirm with AUG output because it corresponds to the right handed
+! coordinates $(s,\vartheta,\varphi)$ such that iota remains positive. Definitions
+! of the currents, Jpol and Itor are kept independent of the coordinates system in this file,
+! i.e. Jpol is total current through the disc with radius R flowing down (opposite to Z axis).
+!
+! To avoid confusion of coordinate systems, we write out two more output files,
+! "fromefit_neo_lhs.bc" and "fromefit_neo_rhs.bc" with coordinate system indicated in the
+! file name (left handed and right handed, respectively). In these files, we define
+! poloidal current Jpol differently - it is the same with Jpol in "fromefit.bc" format
+! in case of left handed coordinate system and has an opposite sign in case of right handed
+! coordinate system so that current in toroidal field coils is always counted in "theta" direction.
+! In case of standard AUG configurations (sigma = 1), file "fromefit_neo_lhs.bc" is the same with 
+! original format file "fromefit.bc".
+! In the non-standard case (sigma=-1), all three files are different.
+!
+! All respective changes in the code are marked with !<=25.07.2023
+!----------------------End comments Sergei 25.07.2023---------------------------------------
+  sigma_lhs=sigma                                                                           !<=25.07.2023
+  sigma_rhs=-sigma                                                                          !<=25.07.2023
   iunit=71
+  iunit_lhs=72                                                                              !<=25.07.2023
+  iunit_rhs=73                                                                              !<=25.07.2023
   open(iunit,file='fromefit.bc')
+  open(iunit_lhs,file='fromefit_neo_lhs.bc')                                                !<=25.07.2023
+  open(iunit_rhs,file='fromefit_neo_rhs.bc')                                                !<=25.07.2023
   write(iunit,*) 'CC Boozer-coordinate data file generated from EFIT equilibrium file'
+  write(iunit_lhs,*) 'CC Boozer-coordinate data file generated from EFIT equilibrium file'  !<=25.07.2023
+  write(iunit_rhs,*) 'CC Boozer-coordinate data file generated from EFIT equilibrium file'  !<=25.07.2023
   write(iunit,*) 'CC Boozer file format: E. Strumberger'
+  write(iunit_lhs,*) 'CC Boozer file format: left handed set (s,theta,phi)'                 !<=25.07.2023
+  write(iunit_rhs,*) 'CC Boozer file format: right handed set (s,theta,phi)'                !<=25.07.2023
   write(iunit,*) 'CC Authors: S.V. Kasilov, C.G. Albert'
+  write(iunit_lhs,*) 'CC Authors: S.V. Kasilov, C.G. Albert'                                !<=25.07.2023
+  write(iunit_rhs,*) 'CC Authors: S.V. Kasilov, C.G. Albert'                                !<=25.07.2023
   write(iunit,*) 'CC Original EFIT equilibrium file: ',trim(gfile)
+  write(iunit_lhs,*) 'CC Original EFIT equilibrium file: ',trim(gfile)                      !<=25.07.2023
+  write(iunit_rhs,*) 'CC Original EFIT equilibrium file: ',trim(gfile)                      !<=25.07.2023
   write(iunit,*) 'm0b   n0b  nsurf  nper    flux [Tm^2]        a [m]          R [m]'
+  write(iunit_lhs,*) 'm0b   n0b  nsurf  nper    flux [Tm^2]        a [m]          R [m]'    !<=25.07.2023
+  write(iunit_rhs,*) 'm0b   n0b  nsurf  nper    flux [Tm^2]        a [m]          R [m]'    !<=25.07.2023
   write(iunit,'(4i6,e15.6,2f10.5)') mpol, 0, nsurf, 1, sigma*psitor_max*1d-8*twopi, rsmall(nlabel)*1d-2, raxis*1d-2
+  write(iunit_lhs,'(4i6,e15.6,2f10.5)') mpol, 0, nsurf, 1, sigma*psitor_max*1d-8*twopi, rsmall(nlabel)*1d-2, raxis*1d-2  !<=25.07.2023
+  write(iunit_rhs,'(4i6,e15.6,2f10.5)') mpol, 0, nsurf, 1, sigma*psitor_max*1d-8*twopi, rsmall(nlabel)*1d-2, raxis*1d-2  !<=25.07.2023
 !
   phi=0.d0
 !
@@ -146,19 +192,37 @@
 ! end test Fourier expansion
 !
     write(iunit,*) '        s               iota           Jpol/nper          Itor            pprime         sqrt g(0,0)'
+    write(iunit_lhs,*) '        s               iota           Jpol/nper          Itor            pprime         sqrt g(0,0)'  !<=25.07.2023
+    write(iunit_rhs,*) '        s               iota           Jpol/nper          Itor            pprime         sqrt g(0,0)'  !<=25.07.2023
     write(iunit,*) '                                             [A]           [A]             [Pa]         (dV/ds)/nper'
+    write(iunit_lhs,*) '                                             [A]           [A]             [Pa]         (dV/ds)/nper'  !<=25.07.2023
+    write(iunit_rhs,*) '                                             [A]           [A]             [Pa]         (dV/ds)/nper'  !<=25.07.2023
     write(iunit,'(6e17.8)') s, aiota, -B_phi*5.d0, -sigma*B_theta*5.d0, pprime*1.d-1,              &
                                                       -sigma*sqrtg00*psitor_max*1d-6*twopi**2
+    write(iunit_lhs,'(6e17.8)') s, aiota*sigma_lhs, -B_phi*5.d0, -sigma*B_theta*5.d0, pprime*1.d-1,            &               !<=25.07.2023
+                                                      -abs(sqrtg00*psitor_max)*1d-6*twopi**2                                   !<=25.07.2023
+    write(iunit_rhs,'(6e17.8)') s, aiota*sigma_rhs, B_phi*5.d0, -sigma*B_theta*5.d0, pprime*1.d-1,             &               !<=25.07.2023
+                                                      abs(sqrtg00*psitor_max)*1d-6*twopi**2                                    !<=25.07.2023
     write(iunit,*) '    m    n      rmnc [m]         rmns [m]         zmnc [m]         zmns [m]'   &
                    //'         vmnc [ ]         vmns [ ]         bmnc [T]         bmns [T]'
+    write(iunit_lhs,*) '    m    n      rmnc [m]         rmns [m]         zmnc [m]         zmns [m]'   &                       !<=25.07.2023
+                   //'         vmnc [ ]         vmns [ ]         bmnc [T]         bmns [T]'                                    !<=25.07.2023
+    write(iunit_rhs,*) '    m    n      rmnc [m]         rmns [m]         zmnc [m]         zmns [m]'   &                       !<=25.07.2023
+                   //'         vmnc [ ]         vmns [ ]         bmnc [T]         bmns [T]'                                    !<=25.07.2023
     do m=0,mpol
       write(iunit,'(2i5,8e17.8)') m,0,Rmn_c(m)*1d-2, Rmn_s(m)*1d-2, Zmn_c(m)*1d-2, Zmn_s(m)*1d-2,  &
                      almn_c(m), almn_s(m), Bmn_c(m)*1d-4, Bmn_s(m)*1d-4
+      write(iunit_lhs,'(2i5,8e17.8)') m,0,Rmn_c(m)*1d-2, Rmn_s(m)*1d-2*sigma_lhs, Zmn_c(m)*1d-2, Zmn_s(m)*1d-2*sigma_lhs,  &   !<=25.07.2023
+                     almn_c(m), almn_s(m)*sigma_lhs, Bmn_c(m)*1d-4, Bmn_s(m)*1d-4*sigma_lhs                                    !<=25.07.2023
+      write(iunit_rhs,'(2i5,8e17.8)') m,0,Rmn_c(m)*1d-2, Rmn_s(m)*1d-2*sigma_rhs, Zmn_c(m)*1d-2, Zmn_s(m)*1d-2*sigma_rhs,  &   !<=25.07.2023
+                     almn_c(m), almn_s(m)*sigma_rhs, Bmn_c(m)*1d-4, Bmn_s(m)*1d-4*sigma_rhs                                    !<=25.07.2023
     enddo
 
   enddo
 !
   close(iunit)
+  close(iunit_lhs)      !<=25.07.2023
+  close(iunit_rhs)      !<=25.07.2023
 !
 !
 !
