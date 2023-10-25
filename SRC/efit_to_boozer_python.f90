@@ -33,8 +33,22 @@
   read (1,*) psimax   !psi at plasma boundary
   close(1)
 !
+  if (allocated(rbeg)) deallocate(rbeg)
+  if (allocated(rsmall)) deallocate(rsmall)
+  if (allocated(qsaf)) deallocate(qsaf)
+  if (allocated(psi_pol)) deallocate(psi_pol)
+  if (allocated(psi_tor_vac)) deallocate(psi_tor_vac)
+  if (allocated(psi_tor)) deallocate(psi_tor)
+  if (allocated(C_const)) deallocate(C_const)
+!
   allocate(rbeg(nlabel),rsmall(nlabel),qsaf(nlabel),psi_pol(0:nlabel))
   allocate(psi_tor_vac(nlabel),psi_tor(0:nlabel),C_const(nlabel))
+!
+  if (allocated(R_spl)) deallocate(R_spl)
+  if (allocated(Z_spl)) deallocate(Z_spl)
+  if (allocated(bmod_spl)) deallocate(bmod_spl)
+  if (allocated(sqgnorm_spl)) deallocate(sqgnorm_spl)
+  if (allocated(Gfunc_spl)) deallocate(Gfunc_spl)
 !
   allocate(R_spl(0:nspl,0:ntheta,nlabel),Z_spl(0:nspl,0:ntheta,nlabel),bmod_spl(0:nspl,0:ntheta,nlabel))
   allocate(sqgnorm_spl(0:nspl,0:ntheta,nlabel),Gfunc_spl(0:nspl,0:ntheta,nlabel))
@@ -61,6 +75,21 @@
   oneovernt=1.d0/dfloat(nt)
   twoovernt=2.d0*oneovernt
   htheta=twopi*oneovernt
+!
+  if (allocated(calE)) deallocate(calE)
+  if (allocated(calEm_times_Jb)) deallocate(calEm_times_Jb)
+  if (allocated(R_oft)) deallocate(R_oft)
+  if (allocated(Z_oft)) deallocate(Z_oft)
+  if (allocated(al_oft)) deallocate(al_oft)
+  if (allocated(B_oft)) deallocate(B_oft)
+  if (allocated(Rmn_c)) deallocate(Rmn_c)
+  if (allocated(Rmn_s)) deallocate(Rmn_s)
+  if (allocated(Zmn_c)) deallocate(Zmn_c)
+  if (allocated(Zmn_s)) deallocate(Zmn_s)
+  if (allocated(almn_c)) deallocate(almn_c)
+  if (allocated(almn_s)) deallocate(almn_s)
+  if (allocated(Bmn_c)) deallocate(Bmn_c)
+  if (allocated(Bmn_s)) deallocate(Bmn_s)
 !
   allocate(calE(nt),calEm_times_Jb(nt))
   allocate(R_oft(nt),Z_oft(nt),al_oft(nt),B_oft(nt))
