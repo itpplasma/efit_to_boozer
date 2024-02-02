@@ -63,3 +63,7 @@ OBJS/efit_to_boozer.o: SRC/efit_to_boozer.f90 Makefile SRC/efit_to_boozer_mod.f9
 #OBJS/.o: SRC/.f90 Makefile
 #	$(FC) $(OPTS) -c SRC/.f90
 #	mv .o OBJS/
+clean:
+	rm -f *.mod *.o *.so
+	rm -f OBJS/*.o OBJS/*.mod
+	rm -f SRC/*.mod
