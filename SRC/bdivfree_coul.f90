@@ -125,7 +125,7 @@
 !
   double precision, parameter :: pi=3.14159265358979d0
 !
-  integer :: nr_in,np_in,nz_in,ntor_in,ip,np,n,ir,iz  
+  integer :: nr_in,np_in,nz_in,ntor_in,ip,np,n,ir,iz
   integer, dimension(:), allocatable :: imi,ima,jmi,jma
 !
   integer :: nashli_rukami
@@ -265,14 +265,14 @@
      a_re(nashli_rukami,iz) = 0.
      sumbz=0.d0
      do ir=nashli_rukami+1,nr
-        irmax = min(ir+1,nr) 
+        irmax = min(ir+1,nr)
         irmin = irmax - 3
         sumbz = sumbz + sum(dummy(irmin:irmax)*weight)
         a_re(ir,iz)=sumbz
      enddo
      sumbz=0.d0
      do ir=nashli_rukami-1,1,-1
-        irmin = max(ir-1,1) 
+        irmin = max(ir-1,1)
         irmax = irmin + 3
         sumbz = sumbz - sum(dummy(irmin:irmax)*weight)
         a_re(ir,iz)=sumbz
@@ -398,7 +398,7 @@
 !cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !
       subroutine indef_bdf(u,umin,dum1,nup,indu)
-! defines interval for 1D interpolation on uniform mesh, normally 
+! defines interval for 1D interpolation on uniform mesh, normally
 ! looks for the central interval of stencil, but
 ! stops moving of stencil at the boundary (works for mp=4 only!)
 ! Input:
@@ -414,8 +414,8 @@
       implicit double precision (a-h,o-z)
 !
       parameter(mp=4)
-      integer indu(mp)  
-                             
+      integer indu(mp)
+
       indu(1) = int((u-umin)*dum1)
       if( indu(1) .le. 0 ) indu(1) = 1
       indu(mp) = indu(1) + mp - 1
@@ -427,7 +427,7 @@
          indu(i) = indu(i-1) + 1
       enddo
 
-      return 
+      return
       end
 !---------------------------------------------------------------------
       subroutine indsmp_bdf(index,nup,indu)
@@ -443,8 +443,8 @@
 
 ! the power 3 of polinomial is fixed strictly:
       parameter(mp=4)
-      integer indu(mp)  
-                             
+      integer indu(mp)
+
       indu(1) = index - 1
       if( indu(1) .le. 0 ) indu(1) = 1
       indu(mp) = indu(1) + mp - 1
@@ -456,7 +456,7 @@
          indu(i) = indu(i-1) + 1
       enddo
 
-      return 
+      return
       end
 !---------------------------------------------------------------------
       subroutine plag2d_bdf(x,y,fp,dxm1,dym1,xp,yp,polyl2d)
@@ -505,163 +505,6 @@
       return
       end
 !
-!cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-!
-  subroutine spl_five_per(n,h,a,b,c,d,e,f)
-!
-! Periodic spline of the 5-th order. First and last values of function must
-! be the same.
-!
-  implicit none
-!
-  integer :: n,i,ip1,ip2
-  double precision :: h,rhop,rhom,fac,xplu,xmin,gammao_m,gammao_p
-  double precision :: c_gammao_m,c_gammao_p
-  double precision, dimension(n) :: a,b,c,d,e,f
-  double precision, dimension(:), allocatable :: alp,bet,gam
-!
-  rhop=13.d0+sqrt(105.d0)
-  rhom=13.d0-sqrt(105.d0)
-!
-  allocate(alp(n),bet(n),gam(n))
-!
-  alp(1)=0.0d0
-  bet(1)=0.0d0
-!
-  do i=1,n-4
-    ip1=i+1
-    alp(ip1)=-1.d0/(rhop+alp(i))
-    bet(ip1)=alp(ip1)*(bet(i)- &
-             5.d0*(a(i+4)-4.d0*a(i+3)+6.d0*a(i+2)-4.d0*a(ip1)+a(i)))
-  enddo
-  alp(n-2)=-1.d0/(rhop+alp(n-3))
-  bet(n-2)=alp(n-2)*(bet(n-3)- &
-           5.d0*(a(2)-4.d0*a(1)+6.d0*a(n-1)-4.d0*a(n-2)+a(n-3)))
-  alp(n-1)=-1.d0/(rhop+alp(n-2))
-  bet(n-1)=alp(n-1)*(bet(n-2)- &
-           5.d0*(a(3)-4.d0*a(2)+6.d0*a(1)-4.d0*a(n-1)+a(n-2)))
-  alp(n)=-1.d0/(rhop+alp(n-1))
-  bet(n)=alp(n)*(bet(n-1)- &
-           5.d0*(a(4)-4.d0*a(3)+6.d0*a(2)-4.d0*a(1)+a(n-1)))
-!
-  gam(n)=bet(n)
-  do i=n-1,1,-1
-    gam(i)=gam(i+1)*alp(i)+bet(i)
-  enddo
-!
-  xplu=sqrt(0.25d0*rhop**2-1.d0)-0.5d0*rhop
-  xmin=-sqrt(0.25d0*rhop**2-1.d0)-0.5d0*rhop
-  gammao_m=(gam(2)+xplu*gam(n))/(xmin-xplu)
-  gammao_p=(gam(2)+xmin*gam(n))/(xplu-xmin)
-  if(abs(xmin).lt.1) then
-    c_gammao_m=gammao_m/(xmin**(n-1)-1.d0)
-  else
-    c_gammao_m=gammao_m*(1.d0/xmin)**(n-1)/(1.d0-(1.d0/xmin)**(n-1))
-  endif
-  if(abs(xplu).lt.1) then
-    c_gammao_p=gammao_p/(xplu**(n-1)-1.d0)
-  else
-    c_gammao_p=gammao_p*(1.d0/xplu)**(n-1)/(1.d0-(1.d0/xplu)**(n-1))
-  endif
-  gam(1)=gam(1)+c_gammao_m+c_gammao_p
-  do i=2,n
-    if(abs(xmin).lt.1) then
-      c_gammao_m=gammao_m*xmin**(i-1)/(xmin**(n-1)-1.d0)
-    else
-      c_gammao_m=gammao_m*(1.d0/xmin)**(n-i)/(1.d0-(1.d0/xmin)**(n-1))
-    endif
-    if(abs(xplu).lt.1) then
-      c_gammao_p=gammao_p*xplu**(i-1)/(xplu**(n-1)-1.d0)
-    else
-      c_gammao_p=gammao_p*(1.d0/xplu)**(n-i)/(1.d0-(1.d0/xplu)**(n-1))
-    endif
-    gam(i)=gam(i)+c_gammao_m+c_gammao_p
-  enddo
-!
-  alp(1)=0.0d0
-  bet(1)=0.d0
-!
-  do i=1,n-1
-    ip1=i+1
-    alp(ip1)=-1.d0/(rhom+alp(i))
-    bet(ip1)=alp(ip1)*(bet(i)-gam(i))
-  enddo
-!
-  e(n)=bet(n)
-  do i=n-1,1,-1
-    e(i)=e(i+1)*alp(i)+bet(i)
-  enddo
-!
-  xplu=sqrt(0.25d0*rhom**2-1.d0)-0.5d0*rhom
-  xmin=-sqrt(0.25d0*rhom**2-1.d0)-0.5d0*rhom
-  gammao_m=(e(2)+xplu*e(n))/(xmin-xplu)
-  gammao_p=(e(2)+xmin*e(n))/(xplu-xmin)
-  if(abs(xmin).lt.1) then
-    c_gammao_m=gammao_m/(xmin**(n-1)-1.d0)
-  else
-    c_gammao_m=gammao_m*(1.d0/xmin)**(n-1)/(1.d0-(1.d0/xmin)**(n-1))
-  endif
-  if(abs(xplu).lt.1) then
-    c_gammao_p=gammao_p/(xplu**(n-1)-1.d0)
-  else
-    c_gammao_p=gammao_p*(1.d0/xplu)**(n-1)/(1.d0-(1.d0/xplu)**(n-1))
-  endif
-  e(1)=e(1)+c_gammao_m+c_gammao_p
-  do i=2,n
-    if(abs(xmin).lt.1) then
-      c_gammao_m=gammao_m*xmin**(i-1)/(xmin**(n-1)-1.d0)
-    else
-      c_gammao_m=gammao_m*(1.d0/xmin)**(n-i)/(1.d0-(1.d0/xmin)**(n-1))
-    endif
-    if(abs(xplu).lt.1) then
-      c_gammao_p=gammao_p*xplu**(i-1)/(xplu**(n-1)-1.d0)
-    else
-      c_gammao_p=gammao_p*(1.d0/xplu)**(n-i)/(1.d0-(1.d0/xplu)**(n-1))
-    endif
-    e(i)=e(i)+c_gammao_m+c_gammao_p
-  enddo
-!
-  do i=n-1,1,-1
-    f(i)=(e(i+1)-e(i))/5.d0
-  enddo
-  f(n)=f(1)
-!
-  d(n-1)=(a(3)-3.d0*a(2)+3.d0*a(1)-a(n-1))/6.d0 &
-      -(e(3)+27.d0*e(2)+93.d0*e(1)+59.d0*e(n-1))/30.d0
-  d(n-2)=(a(2)-3.d0*a(1)+3.d0*a(n-1)-a(n-2))/6.d0 &
-      -(e(2)+27.d0*e(1)+93.d0*e(n-1)+59.d0*e(n-2))/30.d0
-  do i=n-3,1,-1
-    d(i)=(a(i+3)-3.d0*a(i+2)+3.d0*a(i+1)-a(i))/6.d0 &
-        -(e(i+3)+27.d0*e(i+2)+93.d0*e(i+1)+59.d0*e(i))/30.d0
-  enddo
-  d(n)=d(1)
-  c(n-1)=0.5d0*(a(2)+a(n-1))-a(1)-0.5d0*d(1)-2.5d0*d(n-1) &
-      -0.1d0*(e(2)+18.d0*e(1)+31.d0*e(n-1))
-  b(n-1)=a(1)-a(n-1)-c(n-1)-d(n-1)-0.2d0*(4.d0*e(n-1)+e(1))
-!
-  do i=n-2,1,-1
-    c(i)=0.5d0*(a(i+2)+a(i))-a(i+1)-0.5d0*d(i+1)-2.5d0*d(i) &
-        -0.1d0*(e(i+2)+18.d0*e(i+1)+31.d0*e(i))
-    b(i)=a(i+1)-a(i)-c(i)-d(i)-0.2d0*(4.d0*e(i)+e(i+1))
-  enddo
-  b(n)=b(1)
-  c(n)=c(1)
-!
-  fac=1.d0/h
-  b=b*fac
-  fac=fac/h
-  c=c*fac
-  fac=fac/h
-  d=d*fac
-  fac=fac/h
-  e=e*fac
-  fac=fac/h
-  f=f*fac
-!
-  deallocate(alp,bet,gam)
-!
-  return
-  end
 !
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !
@@ -693,15 +536,16 @@
 !                                   and y (~ dx**(l-1)*dy**(m-1) ))
 !                                   ipoint(i,j) contains the pointer to k
 !
+  use spl_three_to_five_mod, only: spl_five_per
   implicit double precision (a-h,o-z)
-! 
+!
   dimension f(nx,ny),spl(6,6,icount),ipoint(nx,ny)
-! 
+!
   integer,          dimension(:), allocatable :: imi,ima,jmi,jma
   double precision, dimension(:), allocatable :: ai,bi,ci,di,ei,fi
-! 
+!
   nmax=max(nx,ny)
-! 
+!
   allocate( ai(nmax),bi(nmax),ci(nmax),di(nmax),ei(nmax),fi(nmax) )
   allocate(imi(ny),ima(ny),jmi(nx),jma(nx))
 !
@@ -709,7 +553,7 @@
   ima=nx
   jmi=1
   jma=ny
-! 
+!
   spl=0.d0
   ipoint=-1
 !
@@ -772,21 +616,13 @@
 !
 MODULE polleg_mod
 
-  PUBLIC  polleg
-  PRIVATE polleg_1
-  INTERFACE polleg
-     MODULE PROCEDURE polleg_1
-  END INTERFACE
+  IMPLICIT NONE
 
-  PUBLIC  binomial
-  PRIVATE binomial_1
-  INTERFACE binomial
-     MODULE PROCEDURE binomial_1
-  END INTERFACE
+  INTEGER :: dummy
 
 CONTAINS
 !
-  SUBROUTINE polleg_1(n,coefleg)
+  SUBROUTINE polleg(n,coefleg)
 !
 ! Computes coefficients of Legendre polynomials of orders from 0 to n
 
@@ -796,7 +632,6 @@ CONTAINS
 ! Output parameters:
 !           Formal: coefleg(i,j) - j-th coefficient of Legendre polynomial
 !                                  of the order i
-  IMPLICIT NONE
 !
   INTEGER :: n,i,j
 !
@@ -822,9 +657,9 @@ CONTAINS
   ENDDO
 !
   RETURN
-END SUBROUTINE polleg_1
+END SUBROUTINE polleg
 !
-  SUBROUTINE binomial_1(n,coefbin)
+  SUBROUTINE binomial(n,coefbin)
 !
 ! Computes binomial coefficients of orders from 0 to n
 !
@@ -832,7 +667,6 @@ END SUBROUTINE polleg_1
 !           Formal: n            - maximum power of the binom
 ! Output parameters:
 !           Formal: coefbin(i,j) - j-th coefficient of the binom
-  IMPLICIT NONE
 !
   INTEGER :: n,i,j
 !
@@ -858,7 +692,7 @@ END SUBROUTINE polleg_1
   ENDDO
 !
   RETURN
-END SUBROUTINE binomial_1
+END SUBROUTINE binomial
 END MODULE
 !
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -867,7 +701,7 @@ contains
 !
   subroutine binsrc(p,nmin,nmax,xi,i)
 !
-! Finds the index  i  of the array of increasing numbers   p  with dimension  n 
+! Finds the index  i  of the array of increasing numbers   p  with dimension  n
 ! which satisfies   p(i-1) <  xi  <  p(i) . Uses binary search algorithm.
 !
   implicit none
@@ -886,7 +720,7 @@ contains
       imax=i
     else
       imin=i
-    endif 
+    endif
     if(imax.eq.imin+1) exit
   enddo
 !
@@ -904,7 +738,7 @@ CONTAINS
   SUBROUTINE oddorderspline(nshift,nbands,nfun,eta,f,ai,ierr)
 !
 ! Computes natural spline coefficients for the arbitrary odd order spline
-! Spline order is npower=2*nshift+1 
+! Spline order is npower=2*nshift+1
 ! nbands                      - number of points
 ! nfun                        - number of splined functions
 ! eta(1:nbands)               - argument
@@ -1088,9 +922,9 @@ END MODULE oddorderspline_mod
 !
   subroutine invert_mono_reg(nx,arry,xmin,xmax,ny,arrx,ymin,ymax)
 !
-! Inverts the monotonous function y(x) given on the equidistant grid 
-! of x values on the interval [xmin,xmax] by the array y_i=arry(i). 
-! The result, function x(y), is given on the equidistant grid of y values 
+! Inverts the monotonous function y(x) given on the equidistant grid
+! of x values on the interval [xmin,xmax] by the array y_i=arry(i).
+! The result, function x(y), is given on the equidistant grid of y values
 ! at the interval [ymin,ymax] by the array x_i=arrx(i).
 !
   USE oddorderspline_mod
@@ -1311,11 +1145,11 @@ END MODULE oddorderspline_mod
   use field_eq_mod, only : nrad,nzet,rad,zet,hrad,hzet,icp,splpsi,ipoint  &
                          , psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2
   use extract_fluxcoord_mod, only : psif_extract,theta_extract
-! 
+!
   implicit none
-! 
+!
   real(kind=8), parameter :: pi=3.14159265358979d0
-! 
+!
   integer :: npoint,i,j,ierr,k
   real(kind=8) :: rrr,zzz,theta,theta_r,theta_z,theta_rr,theta_rz,theta_zz
   real(kind=8) :: theta_s,theta_t,theta_ss,theta_st,theta_tt
@@ -1323,15 +1157,15 @@ END MODULE oddorderspline_mod
   real(kind=8) :: theta_qt,t_r,t_z,t_rr,t_rz,t_zz
   real(kind=8) :: rho2,rho4,dr,dz,flabel,dflabel,ddflabel,dx,dfl_dpsi,ddfl_dpsi
   real(kind=8) :: s0,ds0ds,dds0ds
-! 
+!
   if(icall.eq.0) then
     icall=1
     call load_theta
   endif
-! 
+!
   call spline(nrad,nzet,rad,zet,hrad,hzet,icp,splpsi,ipoint,rrr,zzz, &
               psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2,ierr)
-! 
+!
   sqpsi_qt=sqrt(abs(psif-psiaxis))
 !
   i=int(sqpsi_qt/h_subgrid_fl)
@@ -1375,7 +1209,7 @@ END MODULE oddorderspline_mod
   t_rr=2.d0*sigma_qt*dr*dz/rho4
   t_zz=-t_rr
   t_rz=sigma_qt*(dz**2-dr**2)/rho4
-! 
+!
   call spline(nlab,nthe,flab,theqt,hlabel,htheqt,icp_pt,splthet,ipoint_pt, &
               flabel,theta_qt,                                             &
               theta,theta_s,theta_t,theta_ss,theta_st,theta_tt,ierr)
@@ -1543,7 +1377,7 @@ END MODULE oddorderspline_mod
   subroutine field_fourier(r,phi,z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ              &
                           ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ)
 !
-! Caution: derivatives are not computed, for derivatives call 
+! Caution: derivatives are not computed, for derivatives call
 ! a driver routine "field_fourier_derivs"
 !
   use new_amn_mod
@@ -2170,7 +2004,7 @@ END MODULE oddorderspline_mod
   subroutine field_fourier_derivs(r,phi,z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ    &
                                  ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ)
 !
-! Computes the field and its derivatives using central differences 
+! Computes the field and its derivatives using central differences
 ! for the field components computed by "field_fourier".
 !
   implicit none
@@ -2179,7 +2013,7 @@ END MODULE oddorderspline_mod
   double precision :: rrr,ppp,zzz,r,phi,z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ       &
                      ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ,del              &
                      ,rm,zm,Br0,Bp0,Bz0,dBrdR0,dBrdp0,dBrdZ0               &
-                     ,dBpdR0,dBpdp0,dBpdZ0,dBzdR0,dBzdp0,dBzdZ0 
+                     ,dBpdR0,dBpdp0,dBpdZ0,dBzdR0,dBzdp0,dBzdZ0
 !
     del=eps*r
 !

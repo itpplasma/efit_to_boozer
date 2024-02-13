@@ -76,16 +76,16 @@
                                          sqrtg,bmod,dbmod_dtheta,R,dR_ds,dR_dtheta,       &
                                          Z,dZ_ds,dZ_dtheta,G,dG_ds,dG_dtheta)
 !
-! Computes safety factor, sqrt(g) of symmetry flux coordinates, module of B, cylindrical 
-! coordinates R and Z and transformation function G as functions of the flux surface label 
-! and poloidal angle of symmetry flux coordinates. 
-! Computes also derivative of module-B over the poloidal angle and derivatives of R, Z and transformation 
+! Computes safety factor, sqrt(g) of symmetry flux coordinates, module of B, cylindrical
+! coordinates R and Z and transformation function G as functions of the flux surface label
+! and poloidal angle of symmetry flux coordinates.
+! Computes also derivative of module-B over the poloidal angle and derivatives of R, Z and transformation
 ! function G over the nomalized toroidal or poloidal flux and poloidal angle theta.
 ! Uses periodic spline interpolation over theta and Lagrange polynomial interpolation over flux srface label.
 ! Two flux surface labels can be used as an input: normalized toroidal flux s and dimensional poloidal
-! flux psi, depending on the input switch inp_label. If inp_label=1 s is an input variable and psi=psi(s) is computed. 
+! flux psi, depending on the input switch inp_label. If inp_label=1 s is an input variable and psi=psi(s) is computed.
 ! If inp_label=2, psi is an input variable, and s=s(psi) is computed.
-! 
+!
 ! Input (inout) arguments:
 !                 inp_label - input switch: 1 for s and 2 for psi
 !                 s         - normalized toroidal flux (inout)
