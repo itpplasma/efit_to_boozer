@@ -9,12 +9,12 @@ FC = gfortran
 #OPTS=-Wunused
 OPTS = -J OBJS -O -fPIC -lblas
 
-OBJS =  OBJS/efit_to_boozer_mod.o \
+OBJS = OBJS/spl_three_to_five_mod.o \
+	OBJS/efit_to_boozer_mod.o \
 	OBJS/odeint_allroutines.o \
 	OBJS/field_divB0.o \
 	OBJS/bdivfree_coul.o \
 	OBJS/spline5_RZ.o \
-	OBJS/spl_three_to_five_mod.o \
 	OBJS/plag_coeff.o \
 	OBJS/binsrc.o \
 	OBJS/rhs.o \
