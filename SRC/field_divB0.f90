@@ -197,6 +197,12 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
 !     call read_dimeq0(nrad,nzet)
     call read_dimeq1(nrad,nzet)
 !
+    if (allocated(rad)) deallocate(rad)
+    if (allocated(zet)) deallocate(zet)
+    if (allocated(psi0)) deallocate(psi0)
+    if (allocated(psi)) deallocate(psi)
+    if (allocated(splfpol)) deallocate(splfpol)
+
     allocate(rad(nrad),zet(nzet))
     allocate(psi0(nrad,nzet),psi(nrad,nzet))
     allocate(splfpol(0:5,nrad))                                                      !<=18.12.18
@@ -266,6 +272,10 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
     hzet = zet(2) - zet(1)
 !
 ! rectangular domain:
+    if (allocated(imi)) deallocate(imi)
+    if (allocated(ima)) deallocate(ima)
+    if (allocated(jmi)) deallocate(jmi)
+    if (allocated(jma)) deallocate(jma)
     allocate( imi(nzet),ima(nzet),jmi(nrad),jma(nrad) )
     imi = 1
     ima = nrad
@@ -281,6 +291,8 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
     enddo
     write(6,*) 'number of points in the table:  ',icp
 !
+    if (allocated(splpsi)) deallocate(splpsi)
+    if (allocated(ipoint)) deallocate(ipoint)
     allocate( splpsi(6,6,icp), ipoint(nrad,nzet) )
 !
     call s2dcut(nrad,nzet,hrad,hzet,psi,imi,ima,jmi,jma,icp,splpsi,ipoint)
