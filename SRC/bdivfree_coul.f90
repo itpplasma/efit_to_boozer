@@ -142,7 +142,7 @@
   double complex :: four_ampl
   double complex, dimension(:,:), allocatable :: expon
 !
-  integer, parameter :: mp=4 ! power of Lagrange's polynomial =3
+  integer, parameter :: mp=4 ! power of Lagrange polynomial =3
   integer,          dimension(mp)    :: indx,indy
   double precision, dimension(mp)    :: xp,yp
   double precision, dimension(mp,mp) :: fp

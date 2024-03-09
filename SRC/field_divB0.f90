@@ -357,7 +357,7 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
   return
 end subroutine field_eq
 
-! ----------- Runov's Original Method --------------------------------
+! ----------- Runov Original Method --------------------------------
 subroutine read_dimeq0(nrad,nzet)
   use input_files
   integer :: nrad, nzet
@@ -696,7 +696,7 @@ subroutine read_field0(rad,phi,zet,rmin,pmin,zmin,hrm1,hpm1,hzm1,Br,Bp,Bz)
   use input_files
   parameter(nr=64,np=37,nz=64)
   real, parameter :: pi=3.14159265358979d0
-  parameter (mp=4) ! power of Lagrange's polynomial =3
+  parameter (mp=4) ! power of Lagrange polynomial =3
   dimension Bz(nr,np,nz)
   dimension Br(nr,np,nz),Bp(nr,np,nz)
   dimension rad(nr), phi(np), zet(nz)
