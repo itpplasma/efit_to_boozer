@@ -55,9 +55,6 @@
     double precision :: psif_extract,theta_extract,psifmin,hpsif
     double precision :: psifmax,phifmax,sigcos
     double precision, dimension(:), allocatable :: phinorm_arr
-
-    ! Make temporary variables threadprivate
-    !$omp threadprivate(psif_extract, theta_extract)
   end module extract_fluxcoord_mod
 !
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
