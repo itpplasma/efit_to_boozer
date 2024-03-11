@@ -1,3 +1,10 @@
+Installation:
+
+    pip install -e
+
+
+This places an _efit_to_boozer compile module in `venv/lib/python../site-packages`
+
 This program is intended to convert an efit file (real space) into
 boozer coordinates.
 
