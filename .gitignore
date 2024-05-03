@@ -2,6 +2,7 @@
 *.mod
 *.so
 efit_to_boozer.x
+hamada_to_boozer.x
 build/
 include/
 lib/

@@ -178,8 +178,8 @@
   allocate(c_HB(-mpolmax:mpolmax,-mpolmax:mpolmax),b_mn_B(-mpolmax:mpolmax))
 !
   open(iunit,file='pert.bc')
-  write(iunit,*) 'CC Fake Boozer-coordinate data file for perturbation field'
-  write(iunit,*) 'CC Fourier amplitudes over Boozer angles are set to those over Hamada angles'
+  write(iunit,*) 'CC Boozer-coordinate data file for perturbation field'
+  write(iunit,*) 'CC Fourier amplitudes over Boozer angles got from conversion of Hamada ones'
   write(iunit,*) 'CC File format is by Andreas Martitsch for use in NEO2-QL'
   write(iunit,*) 'CC Original perturbation is computed by MARS in Hamada coordinates'
   write(iunit,*) 'm0b   n0b  nsurf  nper    flux [Tm^2]        a [m]          R [m]'
