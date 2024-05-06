@@ -46,7 +46,7 @@ Complite it with gfortran (it needs no other files), link the perturbation Booze
 `booz_test.bc`
 
 and run the executable. It reads coise and sine Fourier amlitudes from Boozer file and writes them to two files,
-"bmnc.dat" and "bmns.dat" where the first column is s-value and the rest columns are 
+`bmnc.dat` and `bmns.dat` where the first column is s-value and the rest columns are 
 
 $B_{mn}^c(mode)$ or $B_{mn}^s(mode)$ 
 
