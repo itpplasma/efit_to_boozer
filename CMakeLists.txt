@@ -80,6 +80,7 @@ target_link_libraries(efit_to_boozer
     ${BLAS_LIBRARIES}
     ${LAPACK_LIBRARIES}
 )
+install(TARGETS efit_to_boozer DESTINATION .)
 
 # Grab Python
 find_package(
