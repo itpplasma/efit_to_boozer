@@ -225,6 +225,8 @@
 !
   deallocate(dpsitor_dR)
 !
+  print *,'Normalized poloidal flux psi at the LCMS = ',psi_pol(nlabel),'(psi on axis = 0)'
+!
   print *,'Field line integration: flux functions done'
 !
 !------------------------------------------------------------------------------
