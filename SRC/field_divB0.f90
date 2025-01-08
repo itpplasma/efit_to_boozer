@@ -193,6 +193,7 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
   double precision, intent(out) :: Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
                      ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
   double precision :: psihat,fpol, fpol_prime, rrr, zzz         !<=18.12.18
+  double precision, dimension(:), allocatable :: psi_temp, psi0_temp
 !
 !-------first call: read data from disk-------------------------------
   if(icall_eq .lt. 1) then
@@ -203,11 +204,14 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
     if (allocated(rad)) deallocate(rad)
     if (allocated(zet)) deallocate(zet)
     if (allocated(psi0)) deallocate(psi0)
+    if (allocated(psi_temp)) deallocate(psi_temp)
+    if (allocated(psi0_temp)) deallocate(psi0_temp)
     if (allocated(psi)) deallocate(psi)
     if (allocated(splfpol)) deallocate(splfpol)
 
     allocate(rad(nrad),zet(nzet))
     allocate(psi0(nrad,nzet),psi(nrad,nzet))
+    allocate(psi0_temp(nrad),psi_temp(nrad))
     allocate(splfpol(0:5,nrad))                                                      !<=18.12.18
 
 !     call read_eqfile0(nrad, nzet, psib, btf, rtf, rad, zet, psi)
@@ -230,11 +234,18 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
 !close(191)
 !stop
     do i=1,nzet
-      call window_filter(nrad,nwindow_r,psi(:,i),psi0(:,i))
+      psi0_temp = psi0(:,i)
+      psi_temp = psi(:,i)
+      call window_filter(nrad,nwindow_r,psi_temp,psi0_temp)
     enddo
 !
+    deallocate(psi_temp, psi0_temp)
+    allocate(psi0_temp(nzet),psi_temp(nzet))
+    
     do i=1,nrad
-      call window_filter(nzet,nwindow_z,psi0(i,:),psi(i,:))
+      psi0_temp = psi0(i,:)
+      psi_temp = psi(i,:)
+      call window_filter(nzet,nwindow_z,psi0_temp,psi_temp)
     enddo
 !open(191,file='psi_filt.dat')
 !do i=1,nrad
