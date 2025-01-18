@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.20)
 # Basic project settings.
 project(efit_to_boozer)
 
+set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
@@ -142,10 +143,12 @@ message(STATUS "Python f2py include dir: ${F2PY_INCLUDE_DIR}")
 message(STATUS "Python numpy include dir: ${Python_NumPy_INCLUDE_DIRS}")
 message(STATUS "Python binary output dir: ${CMAKE_CURRENT_BINARY_DIR}")
 
-add_library(fortranobject OBJECT "${F2PY_INCLUDE_DIR}/fortranobject.c")
-target_link_libraries(fortranobject PUBLIC Python::NumPy)
-target_include_directories(fortranobject PUBLIC "${F2PY_INCLUDE_DIR}")
-set_property(TARGET fortranobject PROPERTY POSITION_INDEPENDENT_CODE ON)
+if (NOT TARGET fortranobject)
+  add_library(fortranobject OBJECT "${F2PY_INCLUDE_DIR}/fortranobject.c")
+  target_link_libraries(fortranobject PUBLIC Python::NumPy)
+  target_include_directories(fortranobject PUBLIC "${F2PY_INCLUDE_DIR}")
+  set_property(TARGET fortranobject PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
 
 add_custom_command(
   OUTPUT _efit_to_boozermodule.c _efit_to_boozer-f2pywrappers.f _efit_to_boozer-f2pywrappers2.f90
