@@ -115,7 +115,7 @@
   double precision, intent(inout) :: s,psi,theta
   double precision, intent(out) :: q,dq_ds,C_norm,dC_norm_ds,sqrtg,bmod,dbmod_dtheta, &
                       R,dR_ds,dR_dtheta,Z,dZ_ds,dZ_dtheta,G,dG_ds,dG_dtheta
-  integer :: ir,it,k,km1,ibeg,iend
+  integer :: it,k,km1,ibeg,iend
   double precision :: dtheta
 !
   if(inp_label.eq.1) then
