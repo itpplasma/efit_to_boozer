@@ -12,8 +12,6 @@
   integer :: i,nthetap1
   double precision, dimension(:,:), allocatable :: splcoe
 !
-  twopi = atan(1.d0)*8.d0
-!
 !-----------------------------------------------------------------------
 !
   allocate(splcoe(0:nspl,0:ntheta))

@@ -292,8 +292,6 @@
 !
   deallocate(expon,a_re,a_im,rbpav_dummy,imi,ima,jmi,jma,dummy,brm,bpm,bzm)
 !
-102 format(1000e15.7)
-!
   return
   end subroutine vector_potentials
 !
@@ -1024,6 +1022,7 @@ END MODULE oddorderspline_mod
   arrx(0)=xmin
   arrx(ny)=xmax
 !
+  ixfix=1
   do iy=1,ny-1
     y=ymin+iy*hy
     do ix=0,nx

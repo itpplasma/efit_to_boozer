@@ -54,7 +54,7 @@
 !
       implicit double precision (a-h,o-z)
 !
-      INTEGER nbad,nok,nvar,KMAXX,MAXSTP
+      INTEGER nbad,nok,nvar,MAXSTP
       double precision eps,h1,hmin,x1,x2,ystart(nvar),TINY
       EXTERNAL derivs,rkqs
       PARAMETER (MAXSTP=1000000,TINY=1.e-30)
@@ -92,7 +92,7 @@
         endif
         if((x+h-x2)*(x+h-x1).gt.0.) h=x2-x
         call rkqs(y,dydx,nvar,x,h,eps,yscal,hdid,hnext,derivs)
-        if(hdid.eq.h)then
+        if(abs(hdid-h).le.0.0d0)then
           nok=nok+1
         else
           nbad=nbad+1
@@ -112,11 +112,15 @@
           call alloc_odeint(nvar)
           return
         endif
-        if(abs(hnext).lt.hmin) pause
-     *'stepsize smaller than minimum in odeint'
+        if(abs(hnext).lt.hmin) then
+          write(*,*) 'stepsize smaller than minimum in odeint'
+          write(*,*) 'Press Enter to continue...'
+          read(*,*)
+        endif
         h=hnext
 16    continue
-      pause 'too many steps in odeint'
+      write(*,*) 'too many steps in odeint'
+      write(*,*) 'Press Enter to continue...'
       ialloc=0
       call alloc_odeint(nvar)
       return
@@ -208,7 +212,7 @@ CU    USES derivs,rkck
         h=sign(max(abs(htemp),0.1*abs(h)),h)
         xnew=x+h
 !        if(xnew.eq.x) pause 'stepsize underflow in rkqs'
-        if(xnew.eq.x) then
+        if(abs(xnew-x).le.0.0d0) then
           print *,'stepsize underflow in rkqs, x,y = ',x,y
           stop
         endif
