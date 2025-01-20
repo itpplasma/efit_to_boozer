@@ -292,8 +292,6 @@
 !
   deallocate(expon,a_re,a_im,rbpav_dummy,imi,ima,jmi,jma,dummy,brm,bpm,bzm)
 !
-102 format(1000e15.7)
-!
   return
   end subroutine vector_potentials
 !
@@ -303,8 +301,6 @@
                           ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ)
 !
   use bdivfree_mod
-  use inthecore_mod, only : incore                                            &
-                          , vacf,dvacdr,dvacdz,d2vacdr2,d2vacdrdz,d2vacdz2
 !
   implicit none
 !
@@ -317,7 +313,6 @@
   double precision :: deldBrdR,deldBrdp,deldBrdZ
   double precision :: deldBpdR,deldBpdp,deldBpdZ
   double precision :: deldBzdR,deldBzdp,deldBzdZ
-  double precision :: ar,az,dar_dr,dar_dz,dar_dp,daz_dr,daz_dz,daz_dp
   double complex :: expon,anr,anz,anr_r,anr_z,anz_r,anz_z
   double complex :: anr_rr,anr_rz,anr_zz,anz_rr,anz_rz,anz_zz
 !
@@ -750,8 +745,8 @@ CONTAINS
   IMPLICIT NONE
 !
   INTEGER :: nshift,nbands,nfun,npowers
-  INTEGER :: i,j,k,ierr,kk,im,ip,ndim,ind1,ind2,info
-  INTEGER :: nlr,kl,ku,ldab,indbeg
+  INTEGER :: i,k,ierr,kk,ndim,ind1,ind2,info
+  INTEGER :: kl,ku,ldab,indbeg
   INTEGER,          DIMENSION(:), ALLOCATABLE     :: ipiv
   DOUBLE PRECISION                    :: deleta
   DOUBLE PRECISION, DIMENSION(1:nbands)           :: eta
@@ -881,9 +876,9 @@ CONTAINS
 !
   IMPLICIT NONE
 !
-  INTEGER :: npoi,nfun,info,i,ndim,j,k,ldab,kl,ku,indbeg
+  INTEGER :: npoi,nfun,info,i,ndim,j,ldab,kl,ku,indbeg
   INTEGER,          DIMENSION(:),   ALLOCATABLE :: ipiv
-  DOUBLE PRECISION                              :: x0,delf,delx
+  DOUBLE PRECISION                              :: x0
   DOUBLE PRECISION, DIMENSION(npoi)             :: xp
   DOUBLE PRECISION, DIMENSION(npoi,nfun)        :: fp,ai
   DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: amat,ab,bvec
@@ -935,7 +930,7 @@ END MODULE oddorderspline_mod
 !
   integer :: ny,nx,iy,ix,npoints,k,m,ierr
 !
-  double precision :: xmin,xmax,ymin,ymax,hy,hx,yeq,dely,yrun
+  double precision :: xmin,xmax,ymin,ymax,hy,hx,yeq,dely
   double precision, dimension(0:nx) :: arry
   double precision, dimension(0:ny) :: arrx
   DOUBLE PRECISION, DIMENSION(:),     ALLOCATABLE :: y
@@ -1024,6 +1019,7 @@ END MODULE oddorderspline_mod
   arrx(0)=xmin
   arrx(ny)=xmax
 !
+  ixfix=1
   do iy=1,ny-1
     y=ymin+iy*hy
     do ix=0,nx
@@ -1150,7 +1146,7 @@ END MODULE oddorderspline_mod
 !
   real(kind=8), parameter :: pi=3.14159265358979d0
 !
-  integer :: npoint,i,j,ierr,k
+  integer :: i,ierr,k
   real(kind=8) :: rrr,zzz,theta,theta_r,theta_z,theta_rr,theta_rz,theta_zz
   real(kind=8) :: theta_s,theta_t,theta_ss,theta_st,theta_tt
   real(kind=8) :: sqpsi_qt,s_r,s_z,s_rr,s_rz,s_zz
@@ -1236,8 +1232,8 @@ END MODULE oddorderspline_mod
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
-  double precision :: h,rhop,rhom,fac,fpl31,fpl40,fmn31,fmn40          ,x
+  integer :: n,i,ip1
+  double precision :: h,rhop,rhom,fac
   double precision :: a11,a12,a13,a21,a22,a23,a31,a32,a33,det
   double complex :: abeg,bbeg,cbeg,dbeg,ebeg,fbeg
   double complex :: aend,bend,cend,dend,eend,fend
@@ -1381,11 +1377,8 @@ END MODULE oddorderspline_mod
 ! a driver routine "field_fourier_derivs"
 !
   use new_amn_mod
-  use input_files,           only : iunit,fluxdatapath
-  use inthecore_mod, only : incore,psi_sep                                 &
-                          , plaf,dpladr,dpladz,d2pladr2,d2pladrdz,d2pladz2
-  use field_eq_mod,  only : psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2
-  use theta_rz_mod,  only : psiaxis
+  use input_files,           only : iunit
+  use inthecore_mod, only : incore,plaf
   use oddorderspline_mod
   use binsrc_mod
 !
@@ -1398,20 +1391,13 @@ END MODULE oddorderspline_mod
   double precision :: flabel,dx,g11,g12,g11_r,g11_z,g12_r,g12_z
   double precision :: theta,theta_r,theta_z,theta_rr,theta_rz,theta_zz, &
                       s_r,s_z,s_rr,s_rz,s_zz
-  double precision :: fun,fr,fz,frr,frz,fzz
   double precision :: apsi,apsi_s,apsi_t,apsi_p
   double precision :: athe,athe_s,athe_t,athe_p
   double precision :: aphi,aphi_s,aphi_t,aphi_p
   double precision :: delbr,delbz,delbp,delar,delaz
-  double precision :: deldBrdR,deldBrdp,deldBrdZ
-  double precision :: deldBpdR,deldBpdp,deldBpdZ
-  double precision :: deldBzdR,deldBzdp,deldBzdZ
-  double precision :: delardR,delazdR,delardZ,delazdZ
-  double precision :: fcjac,g11_t,g12_t,s0,ds0ds,dds0ds,sqpsi_sep
+  double precision :: fcjac,g11_t,g12_t,s0,ds0ds,dds0ds
   double precision :: sqg_gpp,sqg_gpp_s,sqg_gpp_ss
   double precision :: gpp_sqg,gpp_sqg_s,gpp_sqg_ss
-!
-  integer, dimension(:,:), allocatable :: idummy2
 !
   double complex :: expon,dexpon,ddexpon,cdummy
   double complex :: cas,cas_s,cas_t,cas_p
@@ -1641,6 +1627,7 @@ END MODULE oddorderspline_mod
     enddo
 !
   endif
+  sqg_gpp=0.d0
 !
 ! End of initialization ------------------------------------------------------
 !

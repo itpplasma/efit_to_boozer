@@ -3,8 +3,8 @@
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
-  double precision :: h,rhop,rhom,fac,fpl31,fpl40,fmn31,fmn40          ,x
+  integer :: n,i,ip1
+  double precision :: h,rhop,rhom,fac
   double precision :: a11,a12,a13,a21,a22,a23,a31,a32,a33,b1,b2,b3,det
   double precision :: abeg,bbeg,cbeg,dbeg,ebeg,fbeg
   double precision :: aend,bend,cend,dend,eend,fend
@@ -144,7 +144,7 @@
 ! Calculates coefficients of a 2D spline for a convex domain
 ! (for a non-rectangular domain the interpolation is not continious)
 ! equidistant mesh, but hx must not be = hy
-! 
+!
 !  Input parameters:
 !                    nx           - horizontal size of the mesh (over x)
 !                    ny           - vertical size of the mesh (over y)
@@ -228,7 +228,7 @@
       do l=1,6
         do i=imi(j),ima(j)
           ai(i-imi(j)+1)=spl(1,l,ipoint(i,j))
-        enddo   
+        enddo
         call spl_five_reg(nsi,hx,ai,bi,ci,di,ei,fi)
         do i=imi(j),ima(j)
           ii=i-imi(j)+1
@@ -237,10 +237,10 @@
           spl(4,l,ipoint(i,j))=di(ii)
           spl(5,l,ipoint(i,j))=ei(ii)
           spl(6,l,ipoint(i,j))=fi(ii)
-        enddo   
-      enddo   
+        enddo
+      enddo
     endif
-  enddo   
+  enddo
 !
   deallocate( ai,bi,ci,di,ei,fi )
 !
@@ -252,7 +252,7 @@
   subroutine spline(nx,ny,x,y,hx,hy,icount,spl,ipoint,xb,yb,u,ux,uy, &
     uxx,uxy,uyy,ierr)
 !
-! Evaluates interpolated value u(x,y) and its derivatives ux,uy,uxx,uyy,uxy 
+! Evaluates interpolated value u(x,y) and its derivatives ux,uy,uxx,uyy,uxy
 ! using arrays calculated by  s2dcut
 ! see also comments in subroutine s2dcut
 !  ierr = 1 - point out of the domain

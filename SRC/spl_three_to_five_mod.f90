@@ -7,8 +7,8 @@ contains
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
-  double precision :: h,rhop,rhom,fac,fpl31,fpl40,fmn31,fmn40          ,x
+  integer :: n,i,ip1
+  double precision :: h,rhop,rhom,fac
   double precision :: a11,a12,a13,a21,a22,a23,a31,a32,a33,b1,b2,b3,det
   double precision :: abeg,bbeg,cbeg,dbeg,ebeg,fbeg
   double precision :: aend,bend,cend,dend,eend,fend
@@ -148,8 +148,8 @@ contains
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
-  double precision :: h,rhop,rhom,fac,xplu,xmin,gammao_m,gammao_p,gammao_m_redef
+  integer :: n,i,ip1
+  double precision :: h,rhop,rhom,fac,xplu,xmin,gammao_p,gammao_m_redef
   double precision :: dummy
   double precision, dimension(n) :: a,b,c,d,e,f
   double precision, dimension(:), allocatable :: alp,bet,gam
@@ -271,7 +271,7 @@ contains
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
+  integer :: n,i,ip1
   double precision :: h,fac,fpl31,fpl40,fmn31,fmn40
   double precision, dimension(n) :: a,b,c,d,e
   double precision, dimension(:), allocatable :: alp,bet,gam
@@ -320,7 +320,7 @@ contains
   e(n-1)= a(n)-a(n-1)-b(n-1)-c(n-1)-d(n-1)
   b(n)=b(n-1)+2.d0*c(n-1)+3.d0*d(n-1)+4.d0*e(n-1)
   c(n)=c(n-1)+3.d0*d(n-1)+6.d0*e(n-1)
-  e(n)=e(n-1) 
+  e(n)=e(n-1)
 !
   fac=1.d0/h
   b=b*fac
@@ -342,7 +342,7 @@ contains
 !
   implicit none
 !
-  integer :: n,i,ip1,ip2
+  integer :: n,i,ip1
   double precision :: h,fac,base1,base2,phi1,phi2,phi
   double precision, dimension(n) :: a,b,c,d,e
   double precision, dimension(:), allocatable :: alp,bet,gam
@@ -428,29 +428,29 @@ SUBROUTINE splreg(n,h,y,bi,ci,di)
 
 ! Makes a cubic spline of function y(x)
 !
-! Input:  n                   number of values in y  
+! Input:  n                   number of values in y
 !         h                   step size in x (equidistant)
 !         y(n)                y-values
 ! Output: bi(n),ci(n),di(n)   Spline parameters
-  
+
   IMPLICIT NONE
-  
+
   INTEGER,                     INTENT(in)  :: n
   REAL(kind=kind(1.d0)),               INTENT(in)  :: h
   REAL(kind=kind(1.d0)), DIMENSION(n), INTENT(in)  :: y
   REAL(kind=kind(1.d0)), DIMENSION(n), INTENT(out) :: bi, ci, di
 
   REAL(kind=kind(1.d0))                         :: ak1, ak2, am1, am2, c, e, c1
-  REAL(kind=kind(1.d0)), DIMENSION(:), ALLOCATABLE :: al, bt 
+  REAL(kind=kind(1.d0)), DIMENSION(:), ALLOCATABLE :: al, bt
   INTEGER                                  :: k, n2, i, i5
-  
+
   ALLOCATE ( al(n), bt(n) )
-  
+
   ak1 = 0.d0
   ak2 = 0.d0
   am1 = 0.d0
   am2 = 0.d0
-  k = n-1 
+  k = n-1
   al(1) = ak1
   bt(1) = am1
   n2 = n-2
@@ -463,7 +463,7 @@ SUBROUTINE splreg(n,h,y,bi,ci,di)
   END DO
   ci(n) = (am2+ak2*bt(k))/(1.d0-al(k)*ak2)
   DO i = 1,k
-     i5 = n-i 
+     i5 = n-i
      ci(i5) = al(i5)*ci(i5+1)+bt(i5)
   END DO
   n2 = n-1
@@ -474,7 +474,7 @@ SUBROUTINE splreg(n,h,y,bi,ci,di)
   bi(n)=0.d0
   di(n)=0.d0
   DEALLOCATE ( al, bt )
-  
+
   RETURN
 END SUBROUTINE splreg
 !=====================================================

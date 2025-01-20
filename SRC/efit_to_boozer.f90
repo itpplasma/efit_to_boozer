@@ -1,9 +1,11 @@
   program efit_to_boozer
 !
+  use iso_fortran_env, only: dp => real64
   use efit_to_boozer_mod
   use input_files, only : gfile
 !
   implicit none
+  integer, parameter :: cdp = kind((1.0d0, 1.0d0))
 !
   integer :: nstep,nsurfmax,i,is,it,nsurf,nt,mpol,inp_label,m,iunit
   integer :: iunit_lhs,iunit_rhs                                                            !<=25.07.2023
@@ -66,11 +68,11 @@
   allocate(almn_c(0:mpol),almn_s(0:mpol),Bmn_c(0:mpol),Bmn_s(0:mpol))
 !
 !----------------------Begin comments Sergei 25.07.2023---------------------------------------
-! Variable "sigma" indicates screw direction for the field line. 
+! Variable "sigma" indicates screw direction for the field line.
 !
-! If sigma = 1, this is a standard AUG case of the left-hand screw field line. 
+! If sigma = 1, this is a standard AUG case of the left-hand screw field line.
 ! For the (standard) left handed coordinates $(s,\vartheta,\varphi)$, iota > 0 in this
-! case (contra-variant toroidal and poloidal field components have the same signs). 
+! case (contra-variant toroidal and poloidal field components have the same signs).
 ! The original formal of the output file "fromefit.bc" is the same with standard AUG file.
 !
 ! If sigma = -1, field line is a right-hand srew, and the format of "fromefit.bc" file
@@ -85,7 +87,7 @@
 ! poloidal current Jpol differently - it is the same with Jpol in "fromefit.bc" format
 ! in case of left handed coordinate system and has an opposite sign in case of right handed
 ! coordinate system so that current in toroidal field coils is always counted in "theta" direction.
-! In case of standard AUG configurations (sigma = 1), file "fromefit_neo_lhs.bc" is the same with 
+! In case of standard AUG configurations (sigma = 1), file "fromefit_neo_lhs.bc" is the same with
 ! original format file "fromefit.bc".
 ! In the non-standard case (sigma=-1), all three files are different.
 !
@@ -130,9 +132,9 @@
 !
       call field_eq(R,phi,Z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ)
 !
-      calE(it)=exp(cmplx(0.d0,theta+G/q))
+      calE(it)=exp(cmplx(0.d0,theta+G/q, kind=cdp))
       aJb=R*(Br**2+Bp**2+Bz**2)/(C_norm*Bp)
-      calEm_times_Jb(it)=cmplx(aJb,0.d0)
+      calEm_times_Jb(it)=cmplx(aJb,0.d0, kind=cdp)
 !
       R_oft(it)=R
       Z_oft(it)=Z

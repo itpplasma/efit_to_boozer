@@ -5,7 +5,8 @@
     integer, parameter :: nder  = 1 !number of derivatives from Largange polynomial interpolation
     logical :: load=.true.
     integer :: nlabel,ntheta
-    double precision :: rmn,rmx,zmn,zmx,raxis,zaxis,h_theta,twopi,psipol_max,psitor_max
+    double precision :: twopi = atan(1.d0)*8.d0
+    double precision :: rmn,rmx,zmn,zmx,raxis,zaxis,h_theta,psipol_max,psitor_max
     double precision, dimension(nplag)        :: R_lag,Z_lag,sqrtg_lag,bmod_lag,G_lag
     double precision, dimension(nplag)        :: dbmod_dt_lag,dR_dt_lag,dZ_dt_lag,dG_dt_lag
     double precision, dimension(0:nder,nplag) :: coef

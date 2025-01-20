@@ -5,9 +5,7 @@
                               psi_tor_vac,psi_tor_plas,C_const,       &
                               R_ts,Z_ts,bmod_ts,sqgnorm_ts,Gfunc_ts)
 !
-  use field_eq_mod,  only : psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2, &
-                            icall_eq,nrad,nzet,rad,zet,rtf,btf
-  use theta_rz_mod, only : nsqp,hsqpsi,spllabel
+  use field_eq_mod,  only : psif,icall_eq,nrad,nzet,rad,zet,rtf,btf
   use rhs_surf_mod, only : dz_dphi
   use efit_to_boozer_mod, only : psimax
 !
@@ -27,7 +25,7 @@
   double precision :: rmn,rmx,zmn,zmx,raxis,zaxis
   double precision :: relerr,phiout
   double precision :: phi,rrr,ppp,zzz
-  double precision :: aiota,hbr,sigpsi
+  double precision :: aiota,hbr
   double precision :: Br,Bp,Bz,dBrdR,dBrdp,dBrdZ   &
                      ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
   double precision :: psi_axis,h,sig,phi_sep,sigma
@@ -40,6 +38,9 @@
   double precision, dimension(:), allocatable :: dpsitor_dR
 !
   external :: rhs_axis,rhs_surf
+
+  associate(dummy => nstep)
+  end associate
 !
 !
   nmap=10         !number of maps for finding magnetic axis
@@ -111,6 +112,7 @@
 !
   h=2.d0*pi/nstep_min
 !
+  nsurf = 0
   surf: do isurf=1,nsurfmax
     phi=0.d0
     phiout=h

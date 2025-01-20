@@ -39,8 +39,8 @@ module field_eq_mod
 end module field_eq_mod
 !
 module field_mod
-  integer          :: icall=0
-  double precision :: ipert,ampl,iequil
+  integer          :: icall=0,iequil,ipert
+  double precision :: ampl
 end module field_mod
 !
 module inthecore_mod
@@ -187,13 +187,16 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
 !
   implicit none
 !
-  integer :: ierr,i,j
+  integer :: ierr,i
 !
   double precision, intent(in) :: r,ppp,z
   double precision, intent(out) :: Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
                      ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
   double precision :: psihat,fpol, fpol_prime, rrr, zzz         !<=18.12.18
   double precision, dimension(:), allocatable :: psi_temp, psi0_temp
+
+  associate(dummy => ppp)
+  end associate
 !
 !-------first call: read data from disk-------------------------------
   if(icall_eq .lt. 1) then
@@ -241,7 +244,7 @@ subroutine field_eq(r,ppp,z,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
 !
     deallocate(psi_temp, psi0_temp)
     allocate(psi0_temp(nzet),psi_temp(nzet))
-    
+
     do i=1,nrad
       psi0_temp = psi0(i,:)
       psi_temp = psi(i,:)
@@ -474,8 +477,6 @@ subroutine read_dimeq1(nwEQD,nhEQD)
   return
 
 2000  format(6a8,3i4)
-55    print *, 'READ_EQDIM1: Early EOF in',trim(gfile); STOP
-250   print *, 'READ_EQDIM1: Error reading ',trim(gfile); STOP
 end subroutine read_dimeq1
 
 
@@ -611,20 +612,12 @@ subroutine set_eqcoords(nwEQD,nhEQD,xdim,zdim,r1,zmid,rad,zet)
     rad(j) = r1 + (j-1)*(xdim/(nwEQD-1))
   end do
 
-  z1 = zmid - zdim/2.0		! check this definition wrt zmid
-  do k=1,nhEQD			! runov chooses lower, probe chooses upper
+  z1 = zmid - zdim/2.0  ! check this definition wrt zmid
+  do k=1,nhEQD  ! runov chooses lower, probe chooses upper
     zet(k) = z1 + (k-1)*(zdim/(nhEQD-1))
   end do
 
-!      print *, 'set_coords done.'
-!      print *, 'rad'
-!      print 2010, (rad(j),j=1,nwEQD)
-!      print *, ''
-!      print *, 'zet'
-!      print 2010, (zet(k),k=1,nhEQD)
-
   return
-2010  format(5(e16.9))
 end subroutine set_eqcoords
 
 ! ===========================================================================
@@ -637,11 +630,9 @@ subroutine field_c(rrr,ppp,zzz,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
 !
   implicit none
 !
-  double precision, parameter :: pi=3.14159265358979d0
-!
   double precision :: rrr,ppp,zzz,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
                      ,dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
-  double precision :: rmin,pmin,zmin,rmax,pmax,zmax,hrm1,hpm1,hzm1
+  double precision :: rmin,pmin,zmin,rmax,pmax,zmax
   double precision, dimension(:,:,:), allocatable :: Br,Bp,Bz
 !
 !-------first call: read data from disk-------------------------------
@@ -662,11 +653,7 @@ subroutine field_c(rrr,ppp,zzz,Brad,Bphi,Bzet,dBrdR,dBrdp,dBrdZ  &
     np=37
     nz=131
     allocate(Br(nr,np,nz),Bp(nr,np,nz),Bz(nr,np,nz))
-!
-!    call read_field0(rad,phi,zet,rmin,pmin,zmin,hrm1,hpm1,hzm1,Br,Bp,Bz)
-!    call read_field1(icftype,nr,np,nz,rmin,rmax,pmin,pmax,zmin,zmax,Br,Bp,Bz)
-!
-!
+
     call read_field2(icftype,nr,np,nz,rmin,rmax,pmin,pmax,zmin,zmax,Br,Bp,Bz)
 !
     call vector_potentials(nr,np,nz,ntor,rmin,rmax,pmin,pmax,zmin,zmax,br,bp,bz)
@@ -709,15 +696,22 @@ subroutine read_field0(rad,phi,zet,rmin,pmin,zmin,hrm1,hpm1,hzm1,Br,Bp,Bz)
 !
   use input_files
   parameter(nr=64,np=37,nz=64)
-  real, parameter :: pi=3.14159265358979d0
-  parameter (mp=4) ! power of Lagrange polynomial =3
-  dimension Bz(nr,np,nz)
-  dimension Br(nr,np,nz),Bp(nr,np,nz)
-  dimension rad(nr), phi(np), zet(nz)
-  dimension xp(mp),yp(mp),zp(mp),fp(mp,mp,mp)
-  integer indx(mp), indy(mp), indz(mp)
+  real(8), parameter :: pi=3.14159265358979d0
+  real(8) :: Bz(nr,np,nz)
+  real(8) :: Br(nr,np,nz),Bp(nr,np,nz)
+  real(8) :: rad(nr), phi(np), zet(nz)
+  real(8) :: pmin, pmax, hphi
   data icall/0/
   save
+
+  associate(dummy => hrm1)
+  end associate
+
+  associate(dummy => hpm1)
+  end associate
+
+  associate(dummy => hzm1)
+  end associate
 !
 !-------first call: read data from disk-------------------------------
      open(1,file=cfile,status='old',action='read')
@@ -728,7 +722,7 @@ subroutine read_field0(rad,phi,zet,rmin,pmin,zmin,hrm1,hpm1,hzm1,Br,Bp,Bz)
      read(1,*)
 
 !---Input B      -->T = V*s/m/m
-     do j=1,np-1	 !only npmax-1 points are given
+     do j=1,np-1  !only npmax-1 points are given
         do k=nz,1,-1  !reverse order of probe data
            do i=1,nr
               read(1,*) Br(i,j,k), Bp(i,j,k), Bz(i,j,k)
@@ -852,7 +846,7 @@ subroutine stretch_coords(r,z,rm,zm)
   integer, parameter :: nrzmx=100 ! possible max. of nrz
   integer, parameter :: nrhotht=360
   real(kind=8), parameter :: pi = 3.14159265358979d0
-  real(kind=8) R0,Rw, Zw, htht, Rl, Zl, a, b, r, z, rm, zm, rho, tht, rho_c, delta
+  real(kind=8) R0,Rw, Zw, htht, a, b, r, z, rm, zm, rho, tht, rho_c, delta
   real(kind=8), dimension(100):: rad_w, zet_w ! points "convex wall"
   real(kind=8), dimension(:), allocatable :: rho_w, tht_w
   real(kind=8), dimension(nrhotht) :: rho_wall, tht_wall ! polar coords of CW
@@ -938,7 +932,7 @@ end subroutine stretch_coords
   implicit none
 !
   integer :: i
-  double precision :: R,Z,rho2,thet,scalp,xx,yy
+  double precision :: R,Z,rho2,thet,xx,yy
   double precision :: weight,dweight,ddweight
   double precision, dimension(4) :: x,y
   double precision, dimension(:), allocatable :: ri,zi
@@ -1184,7 +1178,7 @@ end subroutine read_field2
 !
   subroutine splint_fpol(x,f,fp)
 !
-  use field_eq_mod, only : nrad,hfpol,splfpol
+  use field_eq_mod, only : hfpol,splfpol
 !
   implicit none
 !
