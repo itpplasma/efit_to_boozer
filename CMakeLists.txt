@@ -8,20 +8,16 @@ cmake_minimum_required(VERSION 3.20)
 project(efit_to_boozer)
 
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # The version number.
 set (efit_to_boozer_VERSION_MAJOR 0)
 set (efit_to_boozer_VERSION_MINOR 0)
 set (efit_to_boozer_VERSION_PATCH 3)
 
-enable_language(Fortran)
+enable_language(C Fortran)
 enable_testing()
-
-if (EXISTS ${CMAKE_BINARY_DIR}/BuildConfig.cmake.in)
-  include (${CMAKE_BINARY_DIR}/BuildConfig.cmake.in)
-endif()
 
 if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU")
 
@@ -81,7 +77,13 @@ target_link_libraries(efit_to_boozer
     ${BLAS_LIBRARIES}
     ${LAPACK_LIBRARIES}
 )
-install(TARGETS efit_to_boozer DESTINATION .)
+
+install(TARGETS efit_to_boozer DESTINATION
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+)
 
 # Grab Python
 find_package(
