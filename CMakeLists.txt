@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 3.20)
 # Basic project settings.
 project(efit_to_boozer)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -59,7 +60,7 @@ if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif("${isSystemDir}" STREQUAL "-1")
 
-add_library(efit_to_boozer SHARED
+add_library(efit_to_boozer STATIC
     SRC/odeint_allroutines.f
     SRC/efit_to_boozer.f90
     SRC/field_divB0.f90
@@ -76,13 +77,6 @@ add_library(efit_to_boozer SHARED
 target_link_libraries(efit_to_boozer
     ${BLAS_LIBRARIES}
     ${LAPACK_LIBRARIES}
-)
-
-install(TARGETS efit_to_boozer DESTINATION
-    LIBRARY DESTINATION .
-    ARCHIVE DESTINATION .
-    RUNTIME DESTINATION .
-    INCLUDES DESTINATION include
 )
 
 # Grab Python
@@ -149,7 +143,6 @@ if (NOT TARGET fortranobject)
   add_library(fortranobject OBJECT "${F2PY_INCLUDE_DIR}/fortranobject.c")
   target_link_libraries(fortranobject PUBLIC Python::NumPy)
   target_include_directories(fortranobject PUBLIC "${F2PY_INCLUDE_DIR}")
-  set_property(TARGET fortranobject PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 add_custom_command(
