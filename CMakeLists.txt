@@ -7,21 +7,18 @@ cmake_minimum_required(VERSION 3.20)
 # Basic project settings.
 project(efit_to_boozer)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # The version number.
 set (efit_to_boozer_VERSION_MAJOR 0)
 set (efit_to_boozer_VERSION_MINOR 0)
 set (efit_to_boozer_VERSION_PATCH 3)
 
-enable_language(Fortran)
+enable_language(C Fortran)
 enable_testing()
-
-if (EXISTS ${CMAKE_BINARY_DIR}/BuildConfig.cmake.in)
-  include (${CMAKE_BINARY_DIR}/BuildConfig.cmake.in)
-endif()
 
 if(${CMAKE_Fortran_COMPILER_ID} STREQUAL "GNU")
 
@@ -51,19 +48,19 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 # (but later on when installing)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH "$ORIGIN")
 
 # add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 # the RPATH to be used when installing, but only if it's not a system directory
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "$ORIGIN" isSystemDir)
 if("${isSystemDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+    set(CMAKE_INSTALL_RPATH "$ORIGIN")
 endif("${isSystemDir}" STREQUAL "-1")
 
-add_library(efit_to_boozer SHARED
+add_library(efit_to_boozer STATIC
     SRC/odeint_allroutines.f
     SRC/efit_to_boozer.f90
     SRC/field_divB0.f90
@@ -81,7 +78,6 @@ target_link_libraries(efit_to_boozer
     ${BLAS_LIBRARIES}
     ${LAPACK_LIBRARIES}
 )
-install(TARGETS efit_to_boozer DESTINATION .)
 
 # Grab Python
 find_package(
@@ -147,7 +143,6 @@ if (NOT TARGET fortranobject)
   add_library(fortranobject OBJECT "${F2PY_INCLUDE_DIR}/fortranobject.c")
   target_link_libraries(fortranobject PUBLIC Python::NumPy)
   target_include_directories(fortranobject PUBLIC "${F2PY_INCLUDE_DIR}")
-  set_property(TARGET fortranobject PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 add_custom_command(
