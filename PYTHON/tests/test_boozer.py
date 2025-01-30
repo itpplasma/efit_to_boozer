@@ -290,6 +290,11 @@ def test_get_B0_of_s_theta_boozer():
     plt.title(f"stor = {stor[0]}, nth = {nth[0]}")
     plt.savefig('test_get_B0_of_s_theta_boozer.png')
 
+def test_get_magnetic_axis():
+    efit_to_boozer.efit_to_boozer.init()
+    R_axis, Z_axis=get_magnetic_axis()
+    print(R_axis)
+    print(Z_axis)
 
 if __name__ == "__main__":
     pytest.main([__file__])
