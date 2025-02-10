@@ -10,6 +10,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 
+[tool.setuptools.packages.find]
+where = ["PYTHON/SRC"]
+
 [tool.scikit-build]
 build-dir = "build"
 build.verbose = true
