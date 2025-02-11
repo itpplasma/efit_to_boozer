@@ -10,10 +10,7 @@ import libneo
 import _efit_to_boozer as efit_to_boozer
 
 __all__ = ['get_magnetic_axis',
-           'get_boozer_transform','get_boozer_harmonics','write_boozer_head',
-           'append_boozer_block_head', 'append_boozer_block',
-           'append_boozer_block_stellerator_symmetry',
-           'convert_to_boozer', 'BoozerFile']
+           'get_boozer_transform','get_boozer_harmonics']
 
 length_cgs_to_si = 1e-2
 debug = False
