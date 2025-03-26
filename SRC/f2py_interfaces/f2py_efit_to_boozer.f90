@@ -23,7 +23,7 @@ module efit_to_boozer
 
         call deinit
 
-        open(1, file='efit_to_boozer.inp')
+        open(1, file='efit_to_boozer.inp', status='old', action='read')
         read (1, *) nstep    !number of integration steps
         read (1, *) nlabel   !grid size over radial variable
         read (1, *) ntheta   !grid size over poloidal angle

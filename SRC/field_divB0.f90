@@ -75,7 +75,7 @@ subroutine field(r,p,z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ   &
 !
   if(icall .eq. 0) then
      icall = 1
-     open(iunit, file='field_divB0.inp')
+     open(iunit, file='field_divB0.inp', status='old', action='read')
      read(iunit,*) ipert        ! 0=eq only, 1=vac, 2=vac+plas no derivatives,
                                 ! 3=plas+vac with derivatives
      read(iunit,*) iequil       ! 0=perturbation alone, 1=with equilibrium
@@ -858,7 +858,7 @@ subroutine stretch_coords(r,z,rm,zm)
      nrz = 0
      rad_w = 0.
      zet_w = 0.
-     open(iunit,file=trim(convexfile))
+     open(iunit, file=trim(convexfile), status='old', action='read')
      do i=1,nrzmx
         read(iunit,*,END=10)rad_w(i),zet_w(i)
         nrz = nrz + 1
