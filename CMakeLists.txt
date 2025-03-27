@@ -3,6 +3,7 @@
 
 # Basic cmake settings/requirements
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
 # Basic project settings.
 project(efit_to_boozer)
