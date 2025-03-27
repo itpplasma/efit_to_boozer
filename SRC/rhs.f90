@@ -3,6 +3,8 @@
 !
   subroutine rhs_axis(phi,y,dy)
 !
+  use field_sub 
+!
   implicit none
 !
   integer, parameter :: ndim = 4
@@ -35,6 +37,7 @@
 !
   subroutine rhs_surf(phi,y,dy)
 !
+  use field_sub 
   use rhs_surf_mod
 !
   implicit none

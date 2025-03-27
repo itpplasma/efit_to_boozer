@@ -5,7 +5,6 @@
 ! Splines magnetic data over theta
 !
   use efit_to_boozer_mod
-  use spl_three_to_five_mod, only : spl_per
 !
   implicit none
 !
@@ -107,6 +106,8 @@
 !                 dG_ds     - derivative of G over normalized toroidal or poloidal flux
 !                 dG_dtheta - derivative of G over polidal angle of symmetry flux coordinates theta
 !
+  use plag_coeff_sub
+  use binsrc_sub
   use efit_to_boozer_mod
 !
   implicit none

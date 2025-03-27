@@ -61,16 +61,27 @@ if("${isSystemDir}" STREQUAL "-1")
 endif("${isSystemDir}" STREQUAL "-1")
 
 add_library(efit_to_boozer STATIC
-    SRC/odeint_allroutines.f
-    SRC/efit_to_boozer.f90
-    SRC/field_divB0.f90
+    ../../libneo/src/libneo_kinds.f90
+    ../../libneo/src/math_constants.f90
+    ../../libneo/src/ode_integration.f90
+    ../../libneo/src/magfie/amn_mod.f90
+    ../../libneo/src/magfie/bdivfree.f90
+    ../../libneo/src/magfie/bdivfree_mod.f90
+    ../../libneo/src/magfie/inthecore_mod.f90
+    ../../libneo/src/magfie/theta_rz_mod.f90
+    ../../libneo/src/magfie/input_files.f90
+    ../../libneo/src/magfie/field_eq_mod.f90
+    ../../libneo/src/magfie/extract_fluxcoord_mod.f90
+    ../../libneo/src/magfie/field_divB0.f90
+    ../../libneo/src/magfie/period_mod.f90
+    ../../libneo/src/magfie/field_c_mod.f90
+    ../../libneo/src/magfie/field_mod.f90
+    ../../libneo/src/magfie/spline5_RZ.f90
+    ../../libneo/src/spl_three_to_five.f90
+    ../../libneo/src/plag_coeff.f90
+    ../../libneo/src/binsrc.f90
     SRC/efit_to_boozer_mod.f90
-    SRC/spline5_RZ.f90
-    SRC/spl_three_to_five_mod.f90
-    SRC/bdivfree_coul.f90
     SRC/field_line_integration_for_Boozer.f90
-    SRC/plag_coeff.f90
-    SRC/binsrc.f90
     SRC/rhs.f90
     SRC/spline_and_interpolate_magdata.f90
 )
@@ -78,6 +89,11 @@ target_link_libraries(efit_to_boozer
     ${BLAS_LIBRARIES}
     ${LAPACK_LIBRARIES}
 )
+
+add_executable(efit_to_boozer.x
+  SRC/efit_to_boozer.f90
+)
+target_link_libraries(efit_to_boozer.x efit_to_boozer)
 
 # Grab Python
 find_package(
