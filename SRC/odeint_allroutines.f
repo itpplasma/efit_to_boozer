@@ -25,6 +25,10 @@
         double precision, dimension(:),   allocatable :: ak2,ak3,ak4,ak5
         double precision, dimension(:),   allocatable :: ak6,ytemp
         double precision, dimension(:),   allocatable :: yerr,ytemp1
+
+!$omp threadprivate(kount, ialloc, dydx, xp, y)
+!$omp threadprivate(yscal, yp, ak2, ak3, ak4, ak5, ak6, ytemp, yerr)
+!$omp threadprivate(ytemp1)
       end module odeint_mod
 !
 !------------------------------------------------------------------------------
@@ -60,6 +64,8 @@
       PARAMETER (MAXSTP=1000000,TINY=1.e-30)
       INTEGER i,nstp
       double precision h,hdid,hnext,x,xsav
+!
+      xsav = 1.234e5
 !
       ialloc=1
       call alloc_odeint(nvar)
@@ -113,14 +119,11 @@
           return
         endif
         if(abs(hnext).lt.hmin) then
-          write(*,*) 'stepsize smaller than minimum in odeint'
-          write(*,*) 'Press Enter to continue...'
-          read(*,*)
+          error stop 'stepsize smaller than minimum in odeint'
         endif
         h=hnext
 16    continue
-      write(*,*) 'too many steps in odeint'
-      write(*,*) 'Press Enter to continue...'
+      error stop 'stepsize smaller than minimum in odeint'
       ialloc=0
       call alloc_odeint(nvar)
       return
