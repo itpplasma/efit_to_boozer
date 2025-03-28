@@ -6,7 +6,7 @@
                               R_ts,Z_ts,bmod_ts,sqgnorm_ts,Gfunc_ts)
 !
   use field_sub
-  use ode_integration
+  use odeint_allroutines_sub
   use field_eq_mod,  only : psif,icall_eq,nrad,nzet,rad,zet,rtf,btf
   use rhs_surf_mod, only : dz_dphi
   use efit_to_boozer_mod, only : psimax

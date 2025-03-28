@@ -64,7 +64,7 @@ endif("${isSystemDir}" STREQUAL "-1")
 add_library(efit_to_boozer STATIC
     ../../libneo/src/libneo_kinds.f90
     ../../libneo/src/math_constants.f90
-    ../../libneo/src/ode_integration.f90
+    ../../libneo/src/odeint_allroutines.f90
     ../../libneo/src/magfie/amn_mod.f90
     ../../libneo/src/magfie/bdivfree.f90
     ../../libneo/src/magfie/bdivfree_mod.f90
