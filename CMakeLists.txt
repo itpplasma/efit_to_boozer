@@ -36,6 +36,7 @@ elseif (${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel")
 
 endif ()
 
+find_package(OpenMP REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -87,8 +88,9 @@ add_library(efit_to_boozer STATIC
     SRC/spline_and_interpolate_magdata.f90
 )
 target_link_libraries(efit_to_boozer
-    ${BLAS_LIBRARIES}
-    ${LAPACK_LIBRARIES}
+    OpenMP::OpenMP_Fortran
+    BLAS::BLAS
+    LAPACK::LAPACK
 )
 
 add_executable(efit_to_boozer.x
@@ -169,14 +171,12 @@ add_custom_command(
   COMMAND "${Python_EXECUTABLE}" -m numpy.f2py
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/f2py_interfaces/f2py_efit_to_boozer.f90"
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/efit_to_boozer.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/field_divB0.f90"
+  ../../libneo/src/magfie/field_divB0.f90
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/efit_to_boozer_mod.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/spline5_RZ.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/spl_three_to_five_mod.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/bdivfree_coul.f90"
+  ../../libneo/src/spl_three_to_five.f90
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/field_line_integration_for_Boozer.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/plag_coeff.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/binsrc.f90"
+  ../../libneo/src/plag_coeff.f90
+  ../../libneo/src/binsrc.f90
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/rhs.f90"
   "${CMAKE_CURRENT_SOURCE_DIR}/SRC/spline_and_interpolate_magdata.f90"
   -m _efit_to_boozer --lower skip: oddorderspline polleg binomial odeint_allroutines', alloc_odeint odeint rkck rkqs :

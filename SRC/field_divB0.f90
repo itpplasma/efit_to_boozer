@@ -35,7 +35,7 @@ module field_eq_mod
   double precision :: psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2
 
   ! Make temporary variables threadprivate
-  !$omp threadprivate(psif,dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2)
+  !$omp threadprivate(dpsidr,dpsidz,d2psidr2,d2psidrdz,d2psidz2)
 end module field_eq_mod
 !
 module field_mod
