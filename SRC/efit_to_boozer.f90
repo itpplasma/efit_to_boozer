@@ -1,6 +1,6 @@
   program efit_to_boozer
 !
-  use iso_fortran_env, only: dp => real64
+  use field_sub
   use efit_to_boozer_mod
   use input_files, only : gfile
 !
@@ -21,7 +21,7 @@
   double precision, dimension(:), allocatable :: Rmn_c,Rmn_s,Zmn_c,Zmn_s,almn_c,almn_s,Bmn_c,Bmn_s
   double complex,   dimension(:), allocatable :: calE,calEm_times_Jb
 !
-  open(1,file='efit_to_boozer.inp')
+  open(1,file='efit_to_boozer.inp',status='old',action='read')
   read (1,*) nstep    !number of integration steps
   read (1,*) nlabel   !grid size over radial variable
   read (1,*) ntheta   !grid size over poloidal angle

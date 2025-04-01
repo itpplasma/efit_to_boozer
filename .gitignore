@@ -1,8 +1,9 @@
 *.o
 *.mod
 *.so
-efit_to_boozer.x
-hamada_to_boozer.x
+*.x
 build/
 include/
 lib/
+*.pyc
+__pycache__
