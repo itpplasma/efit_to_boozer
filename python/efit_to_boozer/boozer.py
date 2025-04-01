@@ -8,9 +8,6 @@ Created on Wed Mar 23 10:17:41 2016
 import numpy as np
 import _efit_to_boozer
 
-__all__ = ['get_magnetic_axis',
-           'get_boozer_transform','get_boozer_harmonics']
-
 length_cgs_to_si = 1e-2
 debug = False
 
