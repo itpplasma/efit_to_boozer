@@ -4,6 +4,7 @@
 !
 ! Splines magnetic data over theta
 !
+  use spl_three_to_five_sub
   use efit_to_boozer_mod
 !
   implicit none
