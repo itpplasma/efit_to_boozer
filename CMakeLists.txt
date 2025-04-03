@@ -36,7 +36,6 @@ elseif (${CMAKE_Fortran_COMPILER_ID} STREQUAL "Intel")
 
 endif ()
 
-find_package(OpenMP REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -88,7 +87,6 @@ add_library(efit_to_boozer STATIC
     SRC/spline_and_interpolate_magdata.f90
 )
 target_link_libraries(efit_to_boozer
-    OpenMP::OpenMP_Fortran
     BLAS::BLAS
     LAPACK::LAPACK
 )
