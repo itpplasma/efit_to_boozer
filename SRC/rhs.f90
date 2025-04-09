@@ -1,3 +1,14 @@
+!ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+!
+  module rhs_surf_mod
+    double precision :: dz_dphi
+  end module rhs_surf_mod
+!
+!-------------------------------------------------------------------------------
+module rhs_boozer_sub
+    implicit none
+
+contains
 !
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 !
@@ -7,10 +18,10 @@
 !
   implicit none
 !
-  integer, parameter :: ndim = 4
-!
-  double precision, dimension(ndim) :: y,dy
-  double precision :: R,phi,Z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,   &
+  double precision, intent(in) :: phi
+  double precision, dimension(:), intent(in) :: y
+  double precision, dimension(:), intent(out) :: dy
+  double precision :: R,Z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,   &
                       dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
 !
   R=y(1)
@@ -27,13 +38,6 @@
   return
   end subroutine rhs_axis
 !
-!ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-!
-  module rhs_surf_mod
-    double precision :: dz_dphi
-  end module rhs_surf_mod
-!
-!-------------------------------------------------------------------------------
 !
   subroutine rhs_surf(phi,y,dy)
 !
@@ -42,10 +46,10 @@
 !
   implicit none
 !
-  integer, parameter :: ndim = 5
-!
-  double precision, dimension(ndim) :: y,dy
-  double precision :: R,phi,Z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,   &
+  double precision, intent(in) :: phi
+  double precision, dimension(:), intent(in) :: y
+  double precision, dimension(:), intent(out) :: dy
+  double precision :: R,Z,Br,Bp,Bz,dBrdR,dBrdp,dBrdZ,   &
                       dBpdR,dBpdp,dBpdZ,dBzdR,dBzdp,dBzdZ
 !
   R=y(1)
@@ -66,3 +70,4 @@
   end subroutine rhs_surf
 !
 !ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+end module rhs_boozer_sub
