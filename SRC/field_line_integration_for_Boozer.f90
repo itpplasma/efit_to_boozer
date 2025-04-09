@@ -7,6 +7,7 @@
 !
   use field_sub
   use odeint_allroutines_sub
+  use rhs_boozer_sub, only: rhs_axis, rhs_surf
   use field_eq_mod,  only : icall_eq,nrad,nzet,rad,zet,rtf,btf
   use rhs_surf_mod, only : dz_dphi
   use efit_to_boozer_mod, only : psimax
@@ -38,8 +39,6 @@
   double precision, dimension(ntheta,nlabel) :: R_ts,Z_ts,bmod_ts,sqgnorm_ts,Gfunc_ts
 !
   double precision, dimension(:), allocatable :: dpsitor_dR
-!
-  external :: rhs_axis,rhs_surf
 
   associate(dummy => nstep)
   end associate
