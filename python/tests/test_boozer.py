@@ -271,7 +271,7 @@ def test_get_boozer_harmonics_divide_f_by_B0_1D_fft():
 
         plt.scatter(res_modes, np.abs(res[0,:]), label=str(kth))
         plt.plot(np.arange(-nth/2,nth/2), np.abs(fmn_fft), label='fft, '+str(kth), ls = '--')
-        #assert np.isclose(np.abs(res[0]), np.abs(fmn_fft[0,ind:(2*kth+1)-ind]), atol=1e-3).all()
+        assert np.isclose(np.abs(res[0]), np.abs(fmn_fft[0,ind:(2*kth+1)-ind]), atol=1e-3).all()
     plt.legend()
     plt.xlabel('m')
     plt.ylabel(r'abs($C_n$)')
@@ -297,4 +297,4 @@ def test_get_magnetic_axis():
     print(Z_axis)
 
 if __name__ == "__main__":
-    pytest.main([__file__])
+    pytest.main([__file__, "-s"])

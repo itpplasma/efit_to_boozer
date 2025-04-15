@@ -252,29 +252,6 @@ def get_boozer_harmonics_divide_f_by_B0_1D(f, stor, num_theta, num_phi, m0b, n, 
 
   return fmn / (num_theta * num_phi)
 
-def get_boozer_harmonics_divide_f_by_B0_1D_fft(f, stor, num_theta, n, dth_of_thb=None, G_of_thb=None):
-  """
-  f_n(ind_stor, th_geom) of normalized toroidal flux (index is used as argument!) and
-  geometric poloidal angle for given
-  toroidal mode number n (also in geometric angle). Takes also the transformation from
-  geometric to Boozer angle in toroidal direction into account (additional phase factor
-  depending on G(\vatheta_B)).
-
-  Returns: Fourier harmonics fmn in terms of Boozer angles, i.e. fmn(s,m) for a given
-  toroidal mode number n
-  """
-
-  ns = stor.shape[0]
-  fmn = np.zeros((ns - 1, 2*num_theta+1), dtype=complex)
-
-  if dth_of_thb==None or G_of_thb==None:
-    dth_of_thb, G_of_thb, theta_boozers, th_geoms, theta_symflux, B0 = get_boozer_transform(stor, num_theta)
-
-  for js, _ in enumerate(stor[:-1]):
-    FF = f(js, th_geoms[js,:]) / np.abs(B0[js](theta_boozers[js,:])) * np.exp(-1j * n * G_of_thb[js](theta_boozers[js,:]))
-    fmn[js, :] = np.fft.fft(FF)
-  return fmn / (2*num_theta+1)
-
 def get_magnetic_axis():
   psi = np.array(0.0)
   theta = np.array(0.0)
