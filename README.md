@@ -1,3 +1,5 @@
+This program converts a geqdsk file into a Boozer file in `.bc` text format.
+
 # Installation
 
 ## Prerequisites
@@ -15,8 +17,6 @@ This will yield `build/efit_to_boozer.x`
     pip install -e .
 
 This places an _efit_to_boozer compile module in `venv/lib/python../site-packages`
-
-This program is intended to convert a geqdsk file into Boozer coordinates.
 
 
 # Usage
