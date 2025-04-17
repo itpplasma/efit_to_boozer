@@ -34,7 +34,7 @@ The file 'efit_to_boozer.inp' contains calculation parameters.
 The file 'field_divB0.inp' contains the name of the input-data files and
 some switches regarding the calculation.
 
-The file 'convexfile' describes the wall of the device. So as long as
+The file `convexwall.dat` describes the wall of the device. So as long as
 the geometry remains the same, this needs not to be switched.
 
 Output files:
@@ -45,4 +45,4 @@ Output files:
     fromefit.bc
     out.06
 
-The file 'fromefit.bc' will contain the boozer data.
+The file `fromefit.bc` will contain the boozer data.
