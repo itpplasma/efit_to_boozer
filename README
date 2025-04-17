@@ -1,6 +1,12 @@
-Installation:
+# Installation
 
-    pip install -e
+## Prerequisites
+`efit_to_boozer` requires a checked-out copy of https://github.com/itpplasma/libneo on the same directory level.
+
+## Main executable
+
+## Python package
+    pip install -e .
 
 
 This places an _efit_to_boozer compile module in `venv/lib/python../site-packages`
