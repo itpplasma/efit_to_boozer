@@ -21,20 +21,22 @@ def get_boozer_transform(stor, num_theta):
 
     G_of_thb = []
     dth_of_thb = []
+    r_of_thb = []
     B0 = []
     theta_boozers = np.zeros((ns - 1, 2*num_theta+1))
     theta_geoms = np.zeros((ns - 1, 2*num_theta+1))
     for ks in np.arange(ns - 1):
-        th_boozers, th_geoms, theta_symflux, G_s, B0_temp = get_angles_G_and_B0(stor[ks], num_theta)
-        dth, th_boozers, th_geoms = get_sign_dependent_thetas(th_geoms, th_boozers)
+        r, th_boozers, th_geoms, theta_symflux, G_s, B0_temp = get_angles_G_and_B0(stor[ks], num_theta)
+        sign, dth, th_boozers, th_geoms = get_sign_dependent_thetas(th_geoms, th_boozers)
 
         G_of_thb.append(CubicSpline(th_boozers, G_s, bc_type="periodic"))
         dth_of_thb.append(CubicSpline(th_boozers, dth, bc_type="periodic"))
+        r_of_thb.append(CubicSpline(th_boozers, r, bc_type="periodic"))
         B0.append(CubicSpline(th_boozers, B0_temp, bc_type='periodic'))
         theta_boozers[ks, :] = th_boozers
         theta_geoms[ks,:] = th_geoms
 
-    return dth_of_thb, G_of_thb, theta_boozers, theta_geoms, theta_symflux, B0
+    return sign, r_of_thb, dth_of_thb, G_of_thb, theta_boozers, theta_geoms, theta_symflux, B0
 
 
 def get_angles_G_and_B0(s, num_theta):
@@ -43,6 +45,7 @@ def get_angles_G_and_B0(s, num_theta):
 
     th_boozers = []
     th_geoms = []
+    r = []
     Gs = []
     B0mod = []
     theta_symflux = 2 * np.pi * np.arange(2 * num_theta) / (2 * num_theta)
@@ -60,6 +63,7 @@ def get_angles_G_and_B0(s, num_theta):
         th_geoms.append(np.arctan2(
           Z*length_cgs_to_si - Z_axis,
           R*length_cgs_to_si - R_axis))
+        r.append(np.sqrt((R*length_cgs_to_si - R_axis)**2 + (Z*length_cgs_to_si - Z_axis)**2))
         B0mod.append(B0mod_temp)
 
     Gs = np.array(Gs)
@@ -68,7 +72,10 @@ def get_angles_G_and_B0(s, num_theta):
     B0mod = np.array(B0mod)
     B0mod = np.append(B0mod, B0mod[0])
 
-    return th_boozers, th_geoms, theta_symflux, Gs, B0mod
+    r = np.array(r)
+    r = np.append(r, r[0])
+
+    return r, th_boozers, th_geoms, theta_symflux, Gs, B0mod
 
 
 def get_sign_dependent_thetas(th_geoms, th_boozers):
@@ -87,9 +94,9 @@ def get_sign_dependent_thetas(th_geoms, th_boozers):
   else:
     sign = 1
 
-  dth= th_geoms + sign * th_boozers
+  dth = th_geoms + sign * th_boozers
 
-  return dth, th_boozers, th_geoms
+  return sign, dth, th_boozers, th_geoms
 
 
 
