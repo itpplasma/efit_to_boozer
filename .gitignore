@@ -1,9 +1,0 @@
-*.o
-*.mod
-*.so
-*.x
-build/
-include/
-lib/
-*.pyc
-__pycache__
