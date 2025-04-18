@@ -164,19 +164,19 @@ endif()
 
 add_custom_command(
   OUTPUT _efit_to_boozermodule.c _efit_to_boozer-f2pywrappers.f _efit_to_boozer-f2pywrappers2.f90
-  DEPENDS SRC/f2py_interfaces/f2py_efit_to_boozer.f90
+  DEPENDS src/f2py_interfaces/f2py_efit_to_boozer.f90
   VERBATIM
   COMMAND "${Python_EXECUTABLE}" -m numpy.f2py
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/f2py_interfaces/f2py_efit_to_boozer.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/efit_to_boozer.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/f2py_interfaces/f2py_efit_to_boozer.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/efit_to_boozer.f90"
   ../../libneo/src/magfie/field_divB0.f90
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/efit_to_boozer_mod.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/efit_to_boozer_mod.f90"
   ../../libneo/src/spl_three_to_five.f90
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/field_line_integration_for_Boozer.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/field_line_integration_for_Boozer.f90"
   ../../libneo/src/plag_coeff.f90
   ../../libneo/src/binsrc.f90
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/rhs.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/spline_and_interpolate_magdata.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/rhs.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/spline_and_interpolate_magdata.f90"
   -m _efit_to_boozer --lower skip: oddorderspline polleg binomial odeint_allroutines', alloc_odeint odeint rkck rkqs :
 )
 
@@ -184,7 +184,7 @@ Python_add_library(_efit_to_boozer WITH_SOABI
   "${CMAKE_CURRENT_BINARY_DIR}/_efit_to_boozermodule.c"
   "${CMAKE_CURRENT_BINARY_DIR}/_efit_to_boozer-f2pywrappers.f"
   "${CMAKE_CURRENT_BINARY_DIR}/_efit_to_boozer-f2pywrappers2.f90"
-  "${CMAKE_CURRENT_SOURCE_DIR}/SRC/f2py_interfaces/f2py_efit_to_boozer.f90"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/f2py_interfaces/f2py_efit_to_boozer.f90"
 )
 
 target_link_libraries(_efit_to_boozer PUBLIC fortranobject efit_to_boozer)
