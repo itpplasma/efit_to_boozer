@@ -81,10 +81,10 @@ add_library(efit_to_boozer STATIC
     ../../libneo/src/spl_three_to_five.f90
     ../../libneo/src/plag_coeff.f90
     ../../libneo/src/binsrc.f90
-    SRC/efit_to_boozer_mod.f90
-    SRC/field_line_integration_for_Boozer.f90
-    SRC/rhs.f90
-    SRC/spline_and_interpolate_magdata.f90
+    src/efit_to_boozer_mod.f90
+    src/field_line_integration_for_Boozer.f90
+    src/rhs.f90
+    src/spline_and_interpolate_magdata.f90
 )
 target_link_libraries(efit_to_boozer
     BLAS::BLAS
@@ -92,7 +92,7 @@ target_link_libraries(efit_to_boozer
 )
 
 add_executable(efit_to_boozer.x
-  SRC/efit_to_boozer.f90
+  app/efit_to_boozer.f90
 )
 target_link_libraries(efit_to_boozer.x efit_to_boozer)
 
